@@ -17,8 +17,8 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
 
 // Settings
-const unsigned int SCR_WIDTH = 1280;
-const unsigned int SCR_HEIGHT = 720;
+const unsigned int SCR_WIDTH = 1920;
+const unsigned int SCR_HEIGHT = 1080;
 
 // Camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -34,12 +34,12 @@ int main()
 {
     // GLFW Initialization
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // GLFW Window creation
-    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Everland", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Everland", glfwGetPrimaryMonitor(), NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -65,7 +65,7 @@ int main()
     glEnable(GL_DEPTH_TEST);
 
     // Shader Program
-    Shader ourShader("resources/shaders/3.3.shader.vs", "resources/shaders/3.3.shader.fs");
+    Shader ourShader("resources/shaders/vShader.glsl", "resources/shaders/fShader.glsl");
 
     // Vertex data
     float vertices[] = {
@@ -111,17 +111,14 @@ int main()
         -0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
         -0.5f, 0.5f, -0.5f, 0.0f, 1.0f};
     // World positions of cubes
-    glm::vec3 cubePositions[] = {
-        glm::vec3(0.0f, 0.0f, 0.0f),
-        glm::vec3(2.0f, 5.0f, -15.0f),
-        glm::vec3(-1.5f, -2.2f, -2.5f),
-        glm::vec3(-3.8f, -2.0f, -12.3f),
-        glm::vec3(2.4f, -0.4f, -3.5f),
-        glm::vec3(-1.7f, 3.0f, -7.5f),
-        glm::vec3(1.3f, -2.0f, -2.5f),
-        glm::vec3(1.5f, 2.0f, -2.5f),
-        glm::vec3(1.5f, 0.2f, -1.5f),
-        glm::vec3(-1.3f, 1.0f, -1.5f)};
+
+    // Terrain generation
+    const int worldSize = 100;
+    glm::vec3 cubePositions[worldSize * worldSize];
+    for (int x = 0; x < worldSize; ++x)
+        for (int z = 0; z < worldSize; ++z)
+            // cubePositions[x * worldSize + z] = glm::vec3(x, glm::distance(glm::vec2(worldSize / 2, worldSize / 2), glm::vec2(x, z)), z);
+            cubePositions[x * worldSize + z] = glm::vec3(x, std::abs(x - worldSize / 2) + std::abs(z - worldSize / 2), z);
 
     unsigned int VBO, VAO;
     glGenVertexArrays(1, &VAO);
@@ -193,12 +190,14 @@ int main()
 
         // Render cubes
         glBindVertexArray(VAO);
-        for (unsigned int i = 0; i < 10; i++)
+        for (unsigned int i = 0; i < sizeof(cubePositions) / sizeof(cubePositions[0]); i++)
         {
             glm::mat4 model = glm::mat4(1.0f);
+            model = glm::scale(model, glm::vec3(0.5f));
+            model = glm::translate(model, glm::vec3(-worldSize / 2, 0, -worldSize / 2));
             model = glm::translate(model, cubePositions[i]);
-            float angle = 20.0f * i;
-            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+            // float angle = 20.0f * i;
+            // model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
             ourShader.setMat4("model", model);
 
             glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -221,6 +220,11 @@ void processInput(GLFWwindow *window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+
+    if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    else
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         camera.ProcessKeyboard(FORWARD, deltaTime);
@@ -262,3 +266,5 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(yoffset);
 }
+
+// g++ -I../include -c main.cpp glad.c stb_image.cpp -O3; if ($?) { g++ main.o glad.o stb_image.o -o Everland -lglfw3 -lgdi32 }; if ($?) { .\Everland.exe }
