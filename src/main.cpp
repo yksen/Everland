@@ -67,7 +67,7 @@ int main()
     // Shader Program
     Shader ourShader("resources/shaders/vShader.glsl", "resources/shaders/fShader.glsl");
 
-    // Vertex data
+    // Terrain generation
     float vertices[] = {
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
         0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
@@ -110,15 +110,12 @@ int main()
         0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
         -0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
         -0.5f, 0.5f, -0.5f, 0.0f, 1.0f};
-    // World positions of cubes
-
-    // Terrain generation
     const int worldSize = 100;
     glm::vec3 cubePositions[worldSize * worldSize];
     for (int x = 0; x < worldSize; ++x)
         for (int z = 0; z < worldSize; ++z)
-            // cubePositions[x * worldSize + z] = glm::vec3(x, glm::distance(glm::vec2(worldSize / 2, worldSize / 2), glm::vec2(x, z)), z);
-            cubePositions[x * worldSize + z] = glm::vec3(x, std::abs(x - worldSize / 2) + std::abs(z - worldSize / 2), z);
+            // cubePositions[x * worldSize + z] = glm::vec3(x, std::abs(x - worldSize / 2) + std::abs(z - worldSize / 2), z);
+            cubePositions[x * worldSize + z] = glm::vec3(x, 0.5 * (glm::sin(x) + glm::cos(z)), z);
 
     unsigned int VBO, VAO;
     glGenVertexArrays(1, &VAO);
@@ -158,6 +155,8 @@ int main()
     ourShader.use();
     ourShader.setInt("texture1", 0);
 
+    float sumOfTime = 0;
+
     // Render loop
     while (!glfwWindowShouldClose(window))
     {
@@ -165,6 +164,7 @@ int main()
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+        sumOfTime += deltaTime;
 
         // Input
         processInput(window);
@@ -193,9 +193,10 @@ int main()
         for (unsigned int i = 0; i < sizeof(cubePositions) / sizeof(cubePositions[0]); i++)
         {
             glm::mat4 model = glm::mat4(1.0f);
-            model = glm::scale(model, glm::vec3(0.5f));
+            model = glm::translate(model, glm::vec3(cubePositions[i].x, glm::sin(cubePositions[i].x + cubePositions[i].z + sumOfTime), cubePositions[i].z));
             model = glm::translate(model, glm::vec3(-worldSize / 2, 0, -worldSize / 2));
             model = glm::translate(model, cubePositions[i]);
+            model = glm::scale(model, glm::vec3(2.0f));
             // float angle = 20.0f * i;
             // model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
             ourShader.setMat4("model", model);
