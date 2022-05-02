@@ -10,6 +10,7 @@
 #include "Camera.h"
 
 #include <iostream>
+#include <random>
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
@@ -155,7 +156,9 @@ int main()
     ourShader.use();
     ourShader.setInt("texture1", 0);
 
-    float sumOfTime = 0;
+    float timeElapsed = 0;
+
+    std::mt19937 mt(time(NULL));
 
     // Render loop
     while (!glfwWindowShouldClose(window))
@@ -164,7 +167,7 @@ int main()
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-        sumOfTime += deltaTime;
+        timeElapsed += deltaTime;
 
         // Input
         processInput(window);
@@ -181,7 +184,7 @@ int main()
         ourShader.use();
 
         // Pass projection matrix to shader
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 200.0f);
         ourShader.setMat4("projection", projection);
 
         // Camera transformation
@@ -190,15 +193,16 @@ int main()
 
         // Render cubes
         glBindVertexArray(VAO);
+
         for (unsigned int i = 0; i < sizeof(cubePositions) / sizeof(cubePositions[0]); i++)
         {
+            glm::vec3 position = cubePositions[i];
             glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, glm::vec3(cubePositions[i].x, glm::sin(cubePositions[i].x + cubePositions[i].z + sumOfTime), cubePositions[i].z));
+            std::uniform_real_distribution<float> dist(0.0f, 1.0f);
+            model = glm::rotate(model, glm::radians(10.0f * timeElapsed), glm::vec3(dist(mt), dist(mt), dist(mt)));
+            model = glm::translate(model, glm::vec3(0, 5 * glm::sin(0.05 * ((position.x + position.z) + timeElapsed)), 0));
             model = glm::translate(model, glm::vec3(-worldSize / 2, 0, -worldSize / 2));
-            model = glm::translate(model, cubePositions[i]);
-            model = glm::scale(model, glm::vec3(2.0f));
-            // float angle = 20.0f * i;
-            // model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+            model = glm::translate(model, position);
             ourShader.setMat4("model", model);
 
             glDrawArrays(GL_TRIANGLES, 0, 36);
