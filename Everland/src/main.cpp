@@ -66,7 +66,7 @@ int main()
     glEnable(GL_DEPTH_TEST);
 
     // Shader Program
-    Shader ourShader("resources/shaders/vShader.glsl", "resources/shaders/fShader.glsl");
+    Shader ourShader("../../assets/shaders/vShader.glsl", "../../assets/shaders/fShader.glsl");
 
     // Terrain generation
     float vertices[] = {
@@ -141,7 +141,7 @@ int main()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     int width, height, nrChannels;
     stbi_set_flip_vertically_on_load(true);
-    unsigned char *data = stbi_load("resources/textures/grass.jpg", &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load("../../assets/images/grass.jpg", &width, &height, &nrChannels, 0);
     if (data)
     {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
