@@ -5,7 +5,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <glm/gtc/noise.hpp>
 
 #include "Application.h"
 #include "Shader.h"
@@ -24,7 +23,7 @@ namespace Everland
         const unsigned int SCR_HEIGHT = 1080;
 
         // Camera
-        Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+        Camera::Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
         float lastX = SCR_WIDTH / 2.0f;
         float lastY = SCR_HEIGHT / 2.0f;
         bool firstMouse = true;
@@ -38,19 +37,32 @@ namespace Everland
             if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
                 glfwSetWindowShouldClose(window, true);
 
+            if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+                World::generate();
+            if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+            {
+                World::noiseMultiplier += 10.0f;
+                World::generate();
+            }
+            if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+            {
+                World::noiseMultiplier -= 10.0f;
+                World::generate();
+            }
+
             if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
             else
                 glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
             if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-                camera.ProcessKeyboard(FORWARD, deltaTime);
+                camera.ProcessKeyboard(Camera::FORWARD, deltaTime);
             if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-                camera.ProcessKeyboard(BACKWARD, deltaTime);
+                camera.ProcessKeyboard(Camera::BACKWARD, deltaTime);
             if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-                camera.ProcessKeyboard(LEFT, deltaTime);
+                camera.ProcessKeyboard(Camera::LEFT, deltaTime);
             if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-                camera.ProcessKeyboard(RIGHT, deltaTime);
+                camera.ProcessKeyboard(Camera::RIGHT, deltaTime);
         }
 
         void framebuffer_size_callback(GLFWwindow *window, int width, int height)
@@ -164,18 +176,6 @@ namespace Everland
                 0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
                 -0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
                 -0.5f, 0.5f, -0.5f, 0.0f, 1.0f};
-            const int worldSize = 100;
-            glm::vec3 cubePositions[worldSize * worldSize];
-
-            for (int x = 0; x < worldSize; ++x)
-                for (int z = 0; z < worldSize; ++z)
-                {
-                    // add noise to the terrain
-                    float noise = glm::perlin(glm::vec2(x / 2, z / 2) * 0.1f);
-                    // float noise = glm::simplex(glm::vec2(x, z) * 0.1f);
-                    float y = glm::round(noise * 5.0f);
-                    cubePositions[x + z * worldSize] = glm::vec3(x, y, z);
-                }
 
             unsigned int VBO, VAO;
             glGenVertexArrays(1, &VAO);
@@ -243,7 +243,7 @@ namespace Everland
                 ourShader.use();
 
                 // Pass projection matrix to shader
-                glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 200.0f);
+                glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 400.0f);
                 ourShader.setMat4("projection", projection);
 
                 // Camera transformation
@@ -253,14 +253,11 @@ namespace Everland
                 // Render cubes
                 glBindVertexArray(VAO);
 
-                for (unsigned int i = 0; i < sizeof(cubePositions) / sizeof(cubePositions[0]); i++)
+                for (unsigned int i = 0; i < World::world.size(); i++)
                 {
-                    glm::vec3 position = cubePositions[i];
+                    glm::vec3 position = World::world[i];
                     glm::mat4 model = glm::mat4(1.0f);
-                    // std::uniform_real_distribution<float> dist(0.0f, 1.0f);
-                    // model = glm::rotate(model, glm::radians(10.0f * timeElapsed), glm::vec3(dist(mt), dist(mt), dist(mt)));
-                    // model = glm::translate(model, glm::vec3(0, 5 * glm::sin(0.05 * ((position.x + position.z) + timeElapsed)), 0));
-                    model = glm::translate(model, glm::vec3(-worldSize / 2, 0, -worldSize / 2));
+                    model = glm::translate(model, glm::vec3(-World::worldSize / 2, 0, -World::worldSize / 2));
                     model = glm::translate(model, position);
                     ourShader.setMat4("model", model);
 

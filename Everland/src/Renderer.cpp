@@ -1,5 +1,3 @@
-#include "Renderer.h"
-
 namespace Everland
 {
     namespace Renderer

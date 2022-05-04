@@ -1,0 +1,7 @@
+namespace Everland
+{
+    namespace Camera
+    {
+
+    }
+}
