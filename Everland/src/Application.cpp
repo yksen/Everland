@@ -23,7 +23,7 @@ namespace Everland
         const unsigned int SCR_HEIGHT = 1080;
 
         // Camera
-        Camera::Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
+        Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
         float lastX = SCR_WIDTH / 2.0f;
         float lastY = SCR_HEIGHT / 2.0f;
         bool firstMouse = true;
@@ -56,13 +56,13 @@ namespace Everland
                 glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
             if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-                camera.ProcessKeyboard(Camera::FORWARD, deltaTime);
+                camera.ProcessKeyboard(FORWARD, deltaTime);
             if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-                camera.ProcessKeyboard(Camera::BACKWARD, deltaTime);
+                camera.ProcessKeyboard(BACKWARD, deltaTime);
             if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-                camera.ProcessKeyboard(Camera::LEFT, deltaTime);
+                camera.ProcessKeyboard(LEFT, deltaTime);
             if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-                camera.ProcessKeyboard(Camera::RIGHT, deltaTime);
+                camera.ProcessKeyboard(RIGHT, deltaTime);
         }
 
         void framebuffer_size_callback(GLFWwindow *window, int width, int height)
@@ -190,6 +190,7 @@ namespace Everland
             glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
             glEnableVertexAttribArray(1);
 
+            /*
             // Create and load a texture
             unsigned int texture1;
             glGenTextures(1, &texture1);
@@ -214,6 +215,7 @@ namespace Everland
 
             ourShader.use();
             ourShader.setInt("texture1", 0);
+            */
 
             float timeElapsed = 0;
 
@@ -235,9 +237,11 @@ namespace Everland
                 glClearColor(0.57f, 0.77f, 0.84f, 1.0f);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+                /*
                 // Bind texture to corresponding texture unit
                 glActiveTexture(GL_TEXTURE0);
                 glBindTexture(GL_TEXTURE_2D, texture1);
+                */
 
                 // Shader activation
                 ourShader.use();
