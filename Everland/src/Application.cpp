@@ -38,7 +38,9 @@ namespace Everland
                 glfwSetWindowShouldClose(window, true);
 
             if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
-                World::generate();
+                World::generateTerrain();
+            if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
+                World::generateDecorations();
             if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
             {
                 World::noiseMultiplier += 10.0f;

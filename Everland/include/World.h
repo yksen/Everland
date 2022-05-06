@@ -12,6 +12,8 @@ namespace Everland
         extern std::vector<glm::vec3> world;
 
         void generate();
+        void generateTerrain();
+        void generateDecorations();
     }
 }
 
