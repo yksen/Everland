@@ -4,3 +4,6 @@
 [submodule "Everland/include/GLFW"]
 	path = Everland/include/GLFW
 	url = https://github.com/glfw/glfw
+[submodule "Everland/include/--force"]
+	path = Everland/include/--force
+	url = https://github.com/mitsuba-renderer/nanogui
