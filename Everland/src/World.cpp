@@ -18,7 +18,7 @@ namespace Everland
         std::vector<std::vector<std::vector<Block>>> world;
         std::vector<std::vector<float>> noiseMap;
 
-        int worldSize = 50;
+        int worldSize = 100;
 
         int minNoiseHeight;
         int maxNoiseHeight;
@@ -32,6 +32,8 @@ namespace Everland
         void generateNoiseMap(int seed, float scale, int octaves, float persistance, float lacunarity, float _amplitude, float _frequency);
         void generateTerrain();
         void generateDecorations();
+
+        bool isVisible(int x, int z, int y);
 
         void generate()
         {
@@ -98,7 +100,8 @@ namespace Everland
                 for (int z = 0; z < worldSize; ++z)
                 {
                     int y = noiseMap[x][z] + std::abs(minNoiseHeight);
-                    if (y > maxWorldHeight) y = maxWorldHeight;
+                    if (y > maxWorldHeight)
+                        y = maxWorldHeight;
 
                     world[x][z][y].setType(Grass);
 
@@ -118,26 +121,57 @@ namespace Everland
             std::mt19937 mt(time(NULL));
             std::uniform_int_distribution<int> treeHeightDist(-2, 2);
 
-            // for (int x = 0; x < worldSize; ++x)
-            //     for (int z = 0; z < worldSize; ++z)
-            //     {
-            //         float rnd = rand() / float(RAND_MAX);
-            //         if (rnd < treeSpawnChance)
-            //         {
-            //             int index = x * worldSize + z;
-            //             int y = world[index].y;
-            //             int newTreeHeight = treeHeight + treeHeightDist(mt);
+            for (int x = 0; x < worldSize; ++x)
+                for (int z = 0; z < worldSize; ++z)
+                {
+                    float rnd = rand() / float(RAND_MAX);
+                    if (rnd < treeSpawnChance)
+                    {
+                        int y = maxWorldHeight;
+                        while (y > 0 && world[x][z][y].type == Air)
+                            --y;
 
-            //             for (int i = 1; i < newTreeHeight; ++i)
-            //                 world.push_back(glm::vec3(x, y + i, z));
+                        int newTreeHeight = treeHeight + treeHeightDist(mt);
 
-            //             for (int i = x - leavesRadius; i < x + leavesRadius; ++i)
-            //                 for (int j = y + newTreeHeight - leavesRadius; j < y + newTreeHeight + leavesRadius; ++j)
-            //                     for (int k = z - leavesRadius; k < z + leavesRadius * 2; ++k)
-            //                         if (glm::distance(glm::vec3(i, j, k), glm::vec3(x, y + newTreeHeight, z)) < leavesRadius)
-            //                             world.push_back(glm::vec3(i, j, k));
-            //         }
-            //     }
+                        for (int i = 1; i < newTreeHeight; ++i)
+                            world[x][z][y + i].setType(Wood);
+
+                        for (int i = x - leavesRadius; i < x + leavesRadius; ++i)
+                            for (int j = y + newTreeHeight - leavesRadius; j < y + newTreeHeight + leavesRadius; ++j)
+                                for (int k = z - leavesRadius; k < z + leavesRadius * 2; ++k)
+                                    if (glm::distance(glm::vec3(i, j, k), glm::vec3(x, y + newTreeHeight, z)) < leavesRadius)
+                                    {
+                                        if (i < 0 || j < 0 || k < 0)
+                                            continue;
+                                        if (i > worldSize - 1 || j > worldSize - 1 || k > worldSize - 1)
+                                            continue;
+                                        world[i][k][j].setType(Leaves);
+                                    }
+                    }
+                }
+        }
+
+        bool isVisible(int x, int z, int y)
+        {
+            std::vector<glm::vec3> adjacentCoordinates{
+                {-1, 0, 0}, {1, 0, 0}, {0, -1, 0}, {0, 1, 0}, {0, 0, -1}, {0, 0, 1}};
+
+            if (x == 0 || z == 0)
+                return true;
+            if (x == worldSize - 1 || z == worldSize - 1)
+                return true;
+
+            for (glm::vec3 relPos : adjacentCoordinates)
+            {
+                if (x + relPos.x < 0 || z + relPos.z < 0 || y + relPos.y < 0)
+                    continue;
+                if (x + relPos.x > worldSize - 1 || z + relPos.z > worldSize - 1 || y + relPos.y > worldSize - 1)
+                    continue;
+                if (world[x + relPos.x][z + relPos.z][y + relPos.y].type == Air)
+                    return true;
+            }
+
+            return false;
         }
     }
 }

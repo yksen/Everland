@@ -249,7 +249,11 @@ namespace Everland
                         for (int y = 0; y < World::world[x][z].size(); ++y)
                         {
                             Block block = World::world[x][z][y];
+                            
                             if (block.type == BlockType::Air)
+                                continue;
+
+                            if (!World::isVisible(x, z, y))
                                 continue;
 
                             glm::vec3 position = {x, y, z};

@@ -28,6 +28,8 @@ namespace Everland
         void generateNoiseMap();
         void generateTerrain();
         void generateDecorations();
+
+        bool isVisible(int x, int z, int y);
     }
 }
 
