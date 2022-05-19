@@ -79,8 +79,6 @@ namespace Everland
         float lastY = SCR_HEIGHT / 2.0f;
         bool firstMouse = true;
 
-        glm::vec3 lightPos(1.0f, 1.0f, 50.0f);
-
         void processInput(GLFWwindow *window)
         {
             if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -164,7 +162,7 @@ namespace Everland
             // GLFW Initialization
             glfwInit();
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
             glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
             // GLFW Window creation
@@ -192,31 +190,17 @@ namespace Everland
             // Global OpenGL state
             glEnable(GL_DEPTH_TEST);
 
-            // // Nanogui Initialization
-            // nanogui::Screen *screen = new nanogui::Screen();
-            // screen->initialize(window, true);
-
-            // nanogui::FormHelper *gui = new nanogui::FormHelper(screen);
-            // nanogui::ref<nanogui::Window> nanoguiWindow = gui->addWindow(nanogui::Vector2i(10, 10), "Settings");
-            // gui->addGroup("Noise map parameters");
-            // gui->addVariable("Scale", World::scale);
-            // gui->addVariable("Octaves", World::octaves);
-            // gui->addVariable("Persistance", World::persistance);
-            // gui->addVariable("Lacunarity", World::lacunarity);
-
-            // screen->setVisible(true);
-            // screen->performLayout();
-            // nanoguiWindow->center();
-
             // Shader Program
             Shader ourShader("../../assets/shaders/vShader.glsl", "../../assets/shaders/fShader.glsl");
 
             unsigned int VBO, cubeVAO;
             glGenVertexArrays(1, &cubeVAO);
             glGenBuffers(1, &VBO);
-            glBindVertexArray(cubeVAO);
+
             glBindBuffer(GL_ARRAY_BUFFER, VBO);
             glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
+
+            glBindVertexArray(cubeVAO);
 
             // Position attribute
             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
@@ -225,13 +209,7 @@ namespace Everland
             glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)(3 * sizeof(float)));
             glEnableVertexAttribArray(1);
 
-            unsigned int lightCubeVAO;
-            glGenVertexArrays(1, &lightCubeVAO);
-            glBindVertexArray(lightCubeVAO);
-
-            glBindBuffer(GL_ARRAY_BUFFER, VBO);
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
-            glEnableVertexAttribArray(0);
+            glm::vec3 lightPos(0.0f, 0.0f, 10.0f);
 
             // Render loop
             while (!glfwWindowShouldClose(Window::window))
@@ -249,17 +227,11 @@ namespace Everland
                 glClearColor(0.57f, 0.77f, 0.84f, 1.0f);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-                /*
-                // Bind texture to corresponding texture unit
-                glActiveTexture(GL_TEXTURE0);
-                glBindTexture(GL_TEXTURE_2D, texture1);
-                */
-
                 // Shader activation
                 ourShader.use();
 
-                ourShader.setVec3("lightPos", lightPos);
                 ourShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+                ourShader.setVec3("lightPos", lightPos);
 
                 // Pass projection matrix to shader
                 glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 400.0f);
@@ -288,7 +260,7 @@ namespace Everland
                             ourShader.setVec3("objectColor", block.color);
                             ourShader.setMat4("model", model);
 
-                            glBindVertexArray(lightCubeVAO);
+                            glBindVertexArray(cubeVAO);
                             glDrawArrays(GL_TRIANGLES, 0, 36);
                         }
 
