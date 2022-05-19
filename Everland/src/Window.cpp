@@ -79,81 +79,18 @@ namespace Everland
         float lastY = SCR_HEIGHT / 2.0f;
         bool firstMouse = true;
 
-        void processInput(GLFWwindow *window)
-        {
-            if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-                glfwSetWindowShouldClose(window, true);
+        bool fullscreenEnabled = false;
 
-            int sign = 1;
-            if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-                sign = -1;
+        std::vector<Block *> blocksToRender;
 
-            if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
-                World::generate();
-            if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
-                World::generateDecorations();
+        void init();
+        void checkVisibility();
+        void newWorld();
 
-            if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS)
-            {
-                World::scale += sign * 0.1f;
-                World::generate();
-            }
-            if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
-            {
-                World::persistance += sign * 0.1f;
-                World::generate();
-            }
-            if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS)
-            {
-                World::lacunarity += sign * 0.1f;
-                World::generate();
-            }
-
-            if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
-                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            else
-                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-                camera.ProcessKeyboard(FORWARD, deltaTime);
-            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-                camera.ProcessKeyboard(BACKWARD, deltaTime);
-            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-                camera.ProcessKeyboard(LEFT, deltaTime);
-            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-                camera.ProcessKeyboard(RIGHT, deltaTime);
-        }
-
-        void framebuffer_size_callback(GLFWwindow *window, int width, int height)
-        {
-            glViewport(0, 0, width, height);
-        }
-
-        void mouse_callback(GLFWwindow *window, double xposIn, double yposIn)
-        {
-            float xpos = xposIn;
-            float ypos = yposIn;
-
-            if (firstMouse)
-            {
-                lastX = xpos;
-                lastY = ypos;
-                firstMouse = false;
-            }
-
-            float xoffset = xpos - lastX;
-            float yoffset = lastY - ypos;
-
-            lastX = xpos;
-            lastY = ypos;
-
-            camera.ProcessMouseMovement(xoffset, yoffset);
-        }
-
-        void scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
-        {
-            camera.ProcessMouseScroll(yoffset);
-        }
+        void processInput(GLFWwindow *window);
+        void framebuffer_size_callback(GLFWwindow *window, int width, int height);
+        void mouse_callback(GLFWwindow *window, double xpos, double ypos);
+        void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 
         void init()
         {
@@ -166,7 +103,15 @@ namespace Everland
             glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
             // GLFW Window creation
-            window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Everland", NULL, NULL);
+            if (fullscreenEnabled)
+            {
+                GLFWmonitor *monitor = glfwGetPrimaryMonitor();
+                const GLFWvidmode *mode = glfwGetVideoMode(monitor);
+                window = glfwCreateWindow(mode->width, mode->height, "Everland", glfwGetPrimaryMonitor(), NULL);
+            }
+            else
+                window = glfwCreateWindow(1280, 720, "Everland", NULL, NULL);
+
             if (window == NULL)
             {
                 std::cout << "Failed to create GLFW window" << std::endl;
@@ -220,6 +165,8 @@ namespace Everland
                 lastFrame = currentFrame;
                 timeElapsed += deltaTime;
 
+                std::cout << "\rFPS: " << 1.0f / deltaTime;
+
                 // Input
                 processInput(window);
 
@@ -244,29 +191,17 @@ namespace Everland
                 // Render cubes
                 glBindVertexArray(cubeVAO);
 
-                for (int x = 0; x < World::world.size(); ++x)
-                    for (int z = 0; z < World::world[x].size(); ++z)
-                        for (int y = 0; y < World::world[x][z].size(); ++y)
-                        {
-                            Block block = World::world[x][z][y];
-                            
-                            if (block.type == BlockType::Air)
-                                continue;
+                for (Block *block : blocksToRender)
+                {
+                    glm::mat4 model = glm::mat4(1.0f);
+                    model = glm::translate(model, glm::vec3(-World::worldSize / 2, 0, -World::worldSize / 2));
+                    model = glm::translate(model, block->position);
+                    ourShader.setVec3("objectColor", block->color);
+                    ourShader.setMat4("model", model);
 
-                            if (!World::isVisible(x, z, y))
-                                continue;
-
-                            glm::vec3 position = {x, y, z};
-
-                            glm::mat4 model = glm::mat4(1.0f);
-                            model = glm::translate(model, glm::vec3(-World::worldSize / 2, 0, -World::worldSize / 2));
-                            model = glm::translate(model, position);
-                            ourShader.setVec3("objectColor", block.color);
-                            ourShader.setMat4("model", model);
-
-                            glBindVertexArray(cubeVAO);
-                            glDrawArrays(GL_TRIANGLES, 0, 36);
-                        }
+                    glBindVertexArray(cubeVAO);
+                    glDrawArrays(GL_TRIANGLES, 0, 36);
+                }
 
                 // GLFW swap buffers and poll IO events
                 glfwSwapBuffers(window);
@@ -276,5 +211,101 @@ namespace Everland
             glDeleteVertexArrays(1, &cubeVAO);
             glDeleteBuffers(1, &VBO);
         }
+
+        void checkVisibility()
+        {
+            blocksToRender.clear();
+            for (int x = 0; x < World::world.size(); ++x)
+                for (int z = 0; z < World::world[x].size(); ++z)
+                    for (int y = 0; y < World::world[x][z].size(); ++y)
+                        if (World::isVisible(x, z, y))
+                            blocksToRender.push_back(&World::world[x][z][y]);
+        }
+
+        void newWorld()
+        {
+            World::generate();
+            checkVisibility();
+        }
+
+        void processInput(GLFWwindow *window)
+        {
+            if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+                glfwSetWindowShouldClose(window, true);
+
+            int sign = 1;
+            if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+                sign = -1;
+
+            if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+                newWorld();
+            if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
+            {
+                World::generateDecorations();
+                checkVisibility();
+            }
+
+            if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS)
+            {
+                World::scale += sign * 0.1f;
+                newWorld();
+            }
+            if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
+            {
+                World::persistance += sign * 0.1f;
+                newWorld();
+            }
+            if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS)
+            {
+                World::lacunarity += sign * 0.1f;
+                newWorld();
+            }
+
+            if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            else
+                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+                camera.ProcessKeyboard(FORWARD, deltaTime);
+            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+                camera.ProcessKeyboard(BACKWARD, deltaTime);
+            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+                camera.ProcessKeyboard(LEFT, deltaTime);
+            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+                camera.ProcessKeyboard(RIGHT, deltaTime);
+        }
+
+        void framebuffer_size_callback(GLFWwindow *window, int width, int height)
+        {
+            glViewport(0, 0, width, height);
+        }
+
+        void mouse_callback(GLFWwindow *window, double xposIn, double yposIn)
+        {
+            float xpos = xposIn;
+            float ypos = yposIn;
+
+            if (firstMouse)
+            {
+                lastX = xpos;
+                lastY = ypos;
+                firstMouse = false;
+            }
+
+            float xoffset = xpos - lastX;
+            float yoffset = lastY - ypos;
+
+            lastX = xpos;
+            lastY = ypos;
+
+            camera.ProcessMouseMovement(xoffset, yoffset);
+        }
+
+        void scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
+        {
+            camera.ProcessMouseScroll(yoffset);
+        }
+
     }
 }

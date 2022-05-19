@@ -22,6 +22,7 @@ namespace Everland
     struct Block
     {
         BlockType type;
+        glm::vec3 position;
         glm::vec3 color;
 
         Block() : type(BlockType::Air)
@@ -32,6 +33,11 @@ namespace Everland
         {
             type = _type;
             color = colors[type];
+        }
+
+        void setPosition(glm::vec3 _position)
+        {
+            position = _position;
         }
     };
 }

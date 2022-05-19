@@ -104,11 +104,16 @@ namespace Everland
                         y = maxWorldHeight;
 
                     world[x][z][y].setType(Grass);
+                    world[x][z][y].setPosition(glm::vec3(x, y, z));
 
                     for (int d = y - 1; d > minWorldHeight; --d)
+                    {
                         world[x][z][d].setType(Stone);
+                        world[x][z][d].setPosition(glm::vec3(x, d, z));
+                    }
 
                     world[x][z][minWorldHeight].setType(Sand);
+                    world[x][z][minWorldHeight].setPosition(glm::vec3(x, minWorldHeight, z));
                 }
         }
 
@@ -134,7 +139,10 @@ namespace Everland
                         int newTreeHeight = treeHeight + treeHeightDist(mt);
 
                         for (int i = 1; i < newTreeHeight; ++i)
+                        {
                             world[x][z][y + i].setType(Wood);
+                            world[x][z][y + i].setPosition(glm::vec3(x, y + i, z));
+                        }
 
                         for (int i = x - leavesRadius; i < x + leavesRadius; ++i)
                             for (int j = y + newTreeHeight - leavesRadius; j < y + newTreeHeight + leavesRadius; ++j)
@@ -146,6 +154,7 @@ namespace Everland
                                         if (i > worldSize - 1 || j > worldSize - 1 || k > worldSize - 1)
                                             continue;
                                         world[i][k][j].setType(Leaves);
+                                        world[i][k][j].setPosition(glm::vec3(i, j, k));
                                     }
                     }
                 }
@@ -153,13 +162,16 @@ namespace Everland
 
         bool isVisible(int x, int z, int y)
         {
+            if (world[x][z][y].type == Air)
+                return false;
+
             std::vector<glm::vec3> adjacentCoordinates{
                 {-1, 0, 0}, {1, 0, 0}, {0, -1, 0}, {0, 1, 0}, {0, 0, -1}, {0, 0, 1}};
 
-            if (x == 0 || z == 0)
-                return true;
-            if (x == worldSize - 1 || z == worldSize - 1)
-                return true;
+            // if (x == 0 || z == 0)
+            //     return true;
+            // if (x == worldSize - 1 || z == worldSize - 1)
+            //     return true;
 
             for (glm::vec3 relPos : adjacentCoordinates)
             {
