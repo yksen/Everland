@@ -18,7 +18,7 @@ namespace Everland
         std::vector<std::vector<std::vector<Block>>> world;
         std::vector<std::vector<float>> noiseMap;
 
-        int worldSize = 100;
+        int worldSize = 50;
 
         int minNoiseHeight;
         int maxNoiseHeight;
@@ -100,10 +100,12 @@ namespace Everland
                     int y = noiseMap[x][z] + std::abs(minNoiseHeight);
                     if (y > maxWorldHeight) y = maxWorldHeight;
 
-                    world[x][z][y].setType(BlockType::Grass);
+                    world[x][z][y].setType(Grass);
 
                     for (int d = y - 1; d > minWorldHeight; --d)
-                        world[x][z][d].setType(BlockType::Stone);
+                        world[x][z][d].setType(Stone);
+
+                    world[x][z][minWorldHeight].setType(Sand);
                 }
         }
 

@@ -11,7 +11,8 @@ namespace Everland
     {
         Air,
         Grass,
-        Stone
+        Stone,
+        Sand
     };
 
     extern std::vector<glm::vec3> colors;
