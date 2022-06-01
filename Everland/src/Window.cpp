@@ -241,7 +241,7 @@ namespace Everland
                 newWorld();
             if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
             {
-                World::generateDecorations();
+                World::generateTrees();
                 checkVisibility();
             }
 

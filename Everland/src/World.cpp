@@ -31,7 +31,7 @@ namespace Everland
         void generate();
         void generateNoiseMap(int seed, float scale, int octaves, float persistance, float lacunarity, float _amplitude, float _frequency);
         void generateTerrain();
-        void generateDecorations();
+        void generateTrees();
 
         bool isVisible(int x, int z, int y);
 
@@ -117,7 +117,7 @@ namespace Everland
                 }
         }
 
-        void generateDecorations()
+        void generateTrees()
         {
             float treeSpawnChance = 0.001;
             int treeHeight = 10;
@@ -151,7 +151,7 @@ namespace Everland
                                     {
                                         if (i < 0 || j < 0 || k < 0)
                                             continue;
-                                        if (i > worldSize - 1 || j > worldSize - 1 || k > worldSize - 1)
+                                        if (i > worldSize - 1 || j > maxWorldHeight + 1 || k > worldSize - 1)
                                             continue;
                                         world[i][k][j].setType(Leaves);
                                         world[i][k][j].setPosition(glm::vec3(i, j, k));

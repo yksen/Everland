@@ -11,7 +11,7 @@ namespace Everland
         extern std::vector<std::vector<float>> noiseMap;
 
         const int minWorldHeight = 0;
-        const int maxWorldHeight = 100;
+        const int maxWorldHeight = 128;
         extern int worldSize;
 
         extern int minNoiseHeight;
@@ -27,7 +27,7 @@ namespace Everland
         void generate();
         void generateNoiseMap();
         void generateTerrain();
-        void generateDecorations();
+        void generateTrees();
 
         bool isVisible(int x, int z, int y);
     }
