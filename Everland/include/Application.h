@@ -1,7 +1,9 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include <GLFW/glfw3.h>
+#include "Core.h"
+
+#include "Window.h"
 
 namespace Everland
 {

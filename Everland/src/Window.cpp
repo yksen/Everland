@@ -1,18 +1,4 @@
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include "stb_image.h"
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-#include "Block.h"
-#include "Camera.h"
-#include "Shader.h"
-#include "World.h"
-
-#include <iostream>
-#include <random>
+#include "Window.h"
 
 namespace Everland
 {
@@ -215,17 +201,12 @@ namespace Everland
         void checkVisibility()
         {
             blocksToRender.clear();
-            for (int x = 0; x < World::world.size(); ++x)
-                for (int z = 0; z < World::world[x].size(); ++z)
-                    for (int y = 0; y < World::world[x][z].size(); ++y)
-                        if (World::isVisible(x, z, y))
-                            blocksToRender.push_back(&World::world[x][z][y]);
-        }
-
-        void newWorld()
-        {
-            World::generate();
-            checkVisibility();
+            for (Chunk chunk : World::chunks)
+                for (int x = 0; x < chunk.blocks.size(); ++x)
+                    for (int z = 0; z < chunk.blocks[x].size(); ++z)
+                        for (int y = 0; y < chunk.blocks[x][z].size(); ++y)
+                            if (World::isVisible(x, z, y))
+                                blocksToRender.push_back(&chunk.blocks[x][z][y]);
         }
 
         void processInput(GLFWwindow *window)
@@ -238,7 +219,10 @@ namespace Everland
                 sign = -1;
 
             if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
-                newWorld();
+            {
+                World::generateNewWorld();
+                checkVisibility();
+            }
             if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
             {
                 World::generateTrees();
@@ -248,17 +232,20 @@ namespace Everland
             if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS)
             {
                 World::scale += sign * 0.1f;
-                newWorld();
+                World::generateNewWorld();
+                checkVisibility();
             }
             if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
             {
                 World::persistance += sign * 0.1f;
-                newWorld();
+                World::generateNewWorld();
+                checkVisibility();
             }
             if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS)
             {
                 World::lacunarity += sign * 0.1f;
-                newWorld();
+                World::generateNewWorld();
+                checkVisibility();
             }
 
             if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)

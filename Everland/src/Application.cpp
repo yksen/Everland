@@ -1,5 +1,4 @@
 #include "Application.h"
-#include "Window.h"
 
 namespace Everland
 {

@@ -1,7 +1,13 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include <GLFW/glfw3.h>
+#include "Core.h"
+
+#include "Block.h"
+#include "Camera.h"
+#include "Player.h"
+#include "Shader.h"
+#include "World.h"
 
 namespace Everland
 {
@@ -11,7 +17,6 @@ namespace Everland
 
         void init();
         void checkVisibility();
-        void newWorld();
 
         void processInput(GLFWwindow *window);
         void framebuffer_size_callback(GLFWwindow *window, int width, int height);
