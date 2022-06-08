@@ -8,6 +8,7 @@ namespace Everland
     namespace Player
     {
         extern glm::vec3 position;
+        const int renderDistance = 2;
     }
 }
 

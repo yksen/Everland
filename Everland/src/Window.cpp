@@ -67,10 +67,10 @@ namespace Everland
 
         bool fullscreenEnabled = false;
 
-        std::vector<Block *> blocksToRender;
+        std::vector<Block> blocksToRender;
 
         void init();
-        void checkVisibility();
+
         void newWorld();
 
         void processInput(GLFWwindow *window);
@@ -142,6 +142,8 @@ namespace Everland
 
             glm::vec3 lightPos(0.0f, 0.0f, 10.0f);
 
+            generateNewWorld();
+
             // Render loop
             while (!glfwWindowShouldClose(Window::window))
             {
@@ -154,6 +156,7 @@ namespace Everland
                 std::cout << "\rFPS: " << 1.0f / deltaTime;
 
                 // Input
+                Player::position = camera.Position;
                 processInput(window);
 
                 // Clear the window
@@ -177,17 +180,35 @@ namespace Everland
                 // Render cubes
                 glBindVertexArray(cubeVAO);
 
-                for (Block *block : blocksToRender)
+                for (auto pair : chunks)
                 {
-                    glm::mat4 model = glm::mat4(1.0f);
-                    model = glm::translate(model, glm::vec3(-World::worldSize / 2, 0, -World::worldSize / 2));
-                    model = glm::translate(model, block->position);
-                    ourShader.setVec3("objectColor", block->color);
-                    ourShader.setMat4("model", model);
+                    Chunk chunk = pair.second;
+                    for (auto block : chunk.visibleBlocks)
+                    {
+                        glm::mat4 model = glm::mat4(1.0f);
+                        // model = glm::translate(model, glm::vec3(-worldSize / 2, 0, -worldSize / 2));
+                        model = glm::translate(model, {block->position.x + chunk.position.x * chunkSize, block->position.y, block->position.z + chunk.position.y * chunkSize});
+                        ourShader.setVec3("objectColor", block->color);
+                        ourShader.setMat4("model", model);
 
-                    glBindVertexArray(cubeVAO);
-                    glDrawArrays(GL_TRIANGLES, 0, 36);
+                        glBindVertexArray(cubeVAO);
+                        glDrawArrays(GL_TRIANGLES, 0, 36);
+                    }
                 }
+
+                generateArea(Player::position, Player::renderDistance);
+
+                // for (Block block : blocksToRender)
+                // {
+                //     glm::mat4 model = glm::mat4(1.0f);
+                //     // model = glm::translate(model, glm::vec3(-worldSize / 2, 0, -worldSize / 2));
+                //     model = glm::translate(model, block->position);
+                //     ourShader.setVec3("objectColor", block.color);
+                //     ourShader.setMat4("model", model);
+
+                //     glBindVertexArray(cubeVAO);
+                //     glDrawArrays(GL_TRIANGLES, 0, 36);
+                // }
 
                 // GLFW swap buffers and poll IO events
                 glfwSwapBuffers(window);
@@ -196,17 +217,6 @@ namespace Everland
 
             glDeleteVertexArrays(1, &cubeVAO);
             glDeleteBuffers(1, &VBO);
-        }
-
-        void checkVisibility()
-        {
-            blocksToRender.clear();
-            for (Chunk chunk : World::chunks)
-                for (int x = 0; x < chunk.blocks.size(); ++x)
-                    for (int z = 0; z < chunk.blocks[x].size(); ++z)
-                        for (int y = 0; y < chunk.blocks[x][z].size(); ++y)
-                            if (World::isVisible(x, z, y))
-                                blocksToRender.push_back(&chunk.blocks[x][z][y]);
         }
 
         void processInput(GLFWwindow *window)
@@ -218,34 +228,34 @@ namespace Everland
             if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
                 sign = -1;
 
+            if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+                camera.MovementSpeed = 40.0f;
+            else
+                camera.MovementSpeed = 20.0f;
+
             if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
             {
-                World::generateNewWorld();
-                checkVisibility();
+                generateNewWorld();
             }
             if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
             {
-                World::generateTrees();
-                checkVisibility();
+                generateTrees();
             }
 
             if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS)
             {
-                World::scale += sign * 0.1f;
-                World::generateNewWorld();
-                checkVisibility();
+                scale += sign * 0.1f;
+                generateNewWorld();
             }
             if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
             {
-                World::persistance += sign * 0.1f;
-                World::generateNewWorld();
-                checkVisibility();
+                persistance += sign * 0.1f;
+                generateNewWorld();
             }
             if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS)
             {
-                World::lacunarity += sign * 0.1f;
-                World::generateNewWorld();
-                checkVisibility();
+                lacunarity += sign * 0.1f;
+                generateNewWorld();
             }
 
             if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)

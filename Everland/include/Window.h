@@ -3,7 +3,6 @@
 
 #include "Core.h"
 
-#include "Block.h"
 #include "Camera.h"
 #include "Player.h"
 #include "Shader.h"
