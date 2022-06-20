@@ -153,7 +153,7 @@ namespace Everland
                 lastFrame = currentFrame;
                 timeElapsed += deltaTime;
 
-                std::cout << "\rFPS: " << 1.0f / deltaTime;
+                glfwSetWindowTitle(window, ("Everland - FPS: " + std::to_string(1.0f / deltaTime)).c_str());
 
                 // Input
                 Player::position = camera.Position;
