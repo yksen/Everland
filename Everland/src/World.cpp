@@ -71,6 +71,7 @@ namespace Everland
         noiseMap.resize(chunkSize, std::vector<float>(chunkSize));
 
         for (size_t x = 0; x < chunkSize; ++x)
+        {
             for (size_t z = 0; z < chunkSize; ++z)
             {
                 float amplitude = _amplitude;
@@ -82,20 +83,23 @@ namespace Everland
                     float sampleX = (x + position.x * chunkSize) / scale * frequency + octaveOffsets[i].x;
                     float sampleZ = (z + position.y * chunkSize) / scale * frequency + octaveOffsets[i].y;
 
-                    float noise = glm::perlin(glm::vec2(sampleX, sampleZ)) * 2 - 1;
+                    float noise = glm::perlin(glm::vec2(sampleX, sampleZ));
                     noiseHeight += noise * amplitude;
 
                     amplitude *= persistance;
                     frequency *= lacunarity;
                 }
 
-                if (noiseHeight < minNoiseHeight)
-                    minNoiseHeight = glm::round(noiseHeight);
-                else if (noiseHeight > maxNoiseHeight)
-                    maxNoiseHeight = glm::round(noiseHeight);
+                if (noiseHeight > 64)
+                    noiseHeight = 64;
+                else if (noiseHeight < -64)
+                    noiseHeight = -64;
 
-                noiseMap[x][z] = glm::round(noiseHeight);
+                noiseHeight = (noiseHeight + (maxWorldHeight / 2)) / maxWorldHeight;
+
+                noiseMap[x][z] = noiseHeight;
             }
+        }
     }
 
     void generateTerrain(Chunk *chunk)
@@ -103,11 +107,10 @@ namespace Everland
         chunk->blocks.resize(chunkSize, std::vector<std::vector<Block>>(chunkSize));
 
         for (int x = 0; x < chunkSize; ++x)
+        {
             for (int z = 0; z < chunkSize; ++z)
             {
-                int y = noiseMap[x][z] + std::abs(minNoiseHeight);
-                if (y > maxWorldHeight)
-                    y = maxWorldHeight;
+                int y = noiseMap[x][z] * maxWorldHeight;
 
                 chunk->blocks[x][z][y].setType(Grass);
                 chunk->blocks[x][z][y].setPosition(glm::vec3(x, y, z));
@@ -121,6 +124,7 @@ namespace Everland
                 chunk->blocks[x][z][minWorldHeight].setType(Sand);
                 chunk->blocks[x][z][minWorldHeight].setPosition(glm::vec3(x, minWorldHeight, z));
             }
+        }
     }
 
     void generateTrees()
