@@ -4,17 +4,16 @@ namespace Everland
 {
     std::mt19937 rng(time((NULL)));
 
+    std::uniform_real_distribution<float> waterColorDist(0.5f, 0.6f);
+
     std::map<std::pair<int, int>, Chunk> chunks;
     std::vector<std::vector<float>> noiseMap;
 
-    int minNoiseHeight = std::numeric_limits<int>::max();
-    int maxNoiseHeight = std::numeric_limits<int>::min();
-
-    float scale = 1.0f;
+    float scale = 3.7f;
     size_t octaves = 4;
     std::vector<glm::vec2> octaveOffsets;
-    float persistance = 0.5f;
-    float lacunarity = 2.0f;
+    float persistance = 1.3f;
+    float lacunarity = 1.0f;
 
     void generateNewWorld();
     void generateChunk(Chunk *chunk);
@@ -29,9 +28,6 @@ namespace Everland
         chunks.clear();
         noiseMap.clear();
         octaveOffsets.clear();
-
-        minNoiseHeight = std::numeric_limits<int>::max();
-        maxNoiseHeight = std::numeric_limits<int>::min();
 
         std::uniform_int_distribution<int> dist(-1e5, 1e5);
         for (size_t i = 0; i < octaves; ++i)
@@ -59,10 +55,7 @@ namespace Everland
     void generateChunk(Chunk *chunk)
     {
         generateNoiseMap(chunk->position, scale, octaves, persistance, lacunarity, 5.0f, 0.1f);
-        // generateNoiseMap(25.0f, 4, 0.5f, 2.0f, 5.0f, 0.1f); // Plains
-        // generateNoiseMap(10.0f, 4, 0.5f, 2.0f, 5.0f, 0.1f); // Hills
         generateTerrain(chunk);
-        // generateDecorations();
         chunk->checkVisibility();
     }
 
@@ -112,7 +105,19 @@ namespace Everland
             {
                 int y = noiseMap[x][z] * maxWorldHeight;
 
-                chunk->blocks[x][z][y].setType(Grass);
+                if (y < seaLevel + 2)
+                {
+                    chunk->blocks[x][z][y].setType(Sand);
+                    if (y < seaLevel)
+                    {
+                        chunk->blocks[x][z][seaLevel].setType(Water);
+                        chunk->blocks[x][z][seaLevel].setPosition(glm::vec3(x, seaLevel, z));
+                        chunk->blocks[x][z][seaLevel].color.g = waterColorDist(rng);
+                    }
+                }
+                else
+                    chunk->blocks[x][z][y].setType(Grass);
+
                 chunk->blocks[x][z][y].setPosition(glm::vec3(x, y, z));
 
                 for (int d = y - 1; d > minWorldHeight; --d)

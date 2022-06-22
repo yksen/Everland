@@ -17,7 +17,8 @@ namespace Everland
         Stone,
         Sand,
         Wood,
-        Leaves
+        Leaves,
+        Water
     };
 
     const std::vector<glm::vec3> blockColors{
@@ -26,17 +27,15 @@ namespace Everland
         {0.529, 0.529, 0.529},
         {1, 0.729, 0.160},
         {0.650, 0.215, 0.027},
-        {0.384, 0.980, 0.239}};
+        {0.384, 0.980, 0.239},
+        {0.101, 0.670, 0.917}};
 
     extern std::map<std::pair<int, int>, Chunk> chunks;
     extern std::vector<std::vector<float>> noiseMap;
 
     const int minWorldHeight = 0;
     const int maxWorldHeight = 128;
-    extern int worldSize;
-
-    extern int minNoiseHeight;
-    extern int maxNoiseHeight;
+    const int seaLevel = 64;
 
     extern float scale;
     extern size_t octaves;

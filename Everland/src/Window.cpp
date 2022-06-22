@@ -158,6 +158,7 @@ namespace Everland
                 // Input
                 Player::position = camera.Position;
                 processInput(window);
+                std::cout << "\rScale\t" << scale << "\tPersistance\t" << persistance << "\tLacunarity\t" << lacunarity;
 
                 // Clear the window
                 glClearColor(0.57f, 0.77f, 0.84f, 1.0f);
