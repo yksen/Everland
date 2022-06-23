@@ -15,6 +15,7 @@ namespace Everland
 
         void breakBlock();
         void placeBlock();
+        int globalToLocal(int global);
     }
 }
 

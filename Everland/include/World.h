@@ -102,7 +102,7 @@ namespace Everland
             visibleBlocks.clear();
             for (size_t x = 0; x < chunkSize; ++x)
                 for (size_t z = 0; z < chunkSize; ++z)
-                    for (size_t y = 0; y < maxWorldHeight; ++y)
+                    for (size_t y = seaLevel; y < maxWorldHeight; ++y)
                         if (blocks[x][z][y].type != Air && blocks[x][z][y + 1].type == Air)
                             visibleBlocks.push_back(&blocks[x][z][y]);
         }

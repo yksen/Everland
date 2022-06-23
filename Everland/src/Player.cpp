@@ -14,13 +14,13 @@ namespace Everland
 
         void placeBlock()
         {
-            int chunkX = position.x / chunkSize;
-            int chunkZ = position.z / chunkSize;
-            int localX = abs(position.x - chunkX * chunkSize);
-            int localZ;
-            int x = (position.x < 0) ? chunkSize - 1 - localX : localX;
+            int chunkX = std::trunc(position.x / chunkSize);
+            if (position.x < 0) --chunkX;
+            int chunkZ = std::trunc(position.z / chunkSize);
+            if (position.z < 0) --chunkZ;
+            int x = globalToLocal(position.x);
             int y = position.y;
-            int z = (position.z < 0) ? chunkSize - 1 - localZ : localZ;
+            int z = globalToLocal(position.z);
             glm::ivec3 blockPosition{x, y, z};
             
             std::cout << position.x << "\t" << position.y << "\t" << position.z << "\n";
@@ -29,6 +29,16 @@ namespace Everland
 
             chunks[{chunkX, chunkZ}].blocks[x][z][y] = Block{BlockType::Stone, blockPosition};
             chunks[{chunkX, chunkZ}].visibleBlocks.push_back(&chunks[{chunkX, chunkZ}].blocks[x][z][y]);
+        }
+
+        int globalToLocal(int global)
+        {
+            std::cout << global << "\n";
+            int result = global % chunkSize;
+            if (result < 0)
+                result += chunkSize;
+            std::cout << result << "\n";
+            return result;
         }
     }
 }
