@@ -64,6 +64,11 @@ namespace Everland
         {
         }
 
+        Block(BlockType type, glm::vec3 position) : type(type), position(position)
+        {
+            color = blockColors[type];
+        }
+
         void setType(BlockType _type)
         {
             type = _type;

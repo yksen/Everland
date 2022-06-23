@@ -42,8 +42,8 @@ namespace Everland
 
     void generateArea(glm::vec3 position, int renderDistance)
     {
-        for (int x = std::floor(position.x / chunkSize) - renderDistance; x <= std::floor(position.x / chunkSize) + renderDistance; ++x)
-            for (int z = std::floor(position.z / chunkSize) - renderDistance; z <= std::floor(position.z / chunkSize) + renderDistance; ++z)
+        for (int x = std::trunc(position.x / chunkSize) - renderDistance; x <= std::trunc(position.x / chunkSize) + renderDistance; ++x)
+            for (int z = std::trunc(position.z / chunkSize) - renderDistance; z <= std::trunc(position.z / chunkSize) + renderDistance; ++z)
                 if (chunks.count({x, z}) == 0)
                 {
                     chunks[{x, z}] = Chunk({x, z});

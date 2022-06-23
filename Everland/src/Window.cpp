@@ -158,7 +158,7 @@ namespace Everland
                 // Input
                 Player::position = camera.Position;
                 processInput(window);
-                std::cout << "\rScale\t" << scale << "\tPersistance\t" << persistance << "\tLacunarity\t" << lacunarity;
+                // std::cout << "\rScale\t" << scale << "\tPersistance\t" << persistance << "\tLacunarity\t" << lacunarity;
 
                 // Clear the window
                 glClearColor(0.57f, 0.77f, 0.84f, 1.0f);
@@ -187,7 +187,6 @@ namespace Everland
                     for (auto block : chunk.visibleBlocks)
                     {
                         glm::mat4 model = glm::mat4(1.0f);
-                        // model = glm::translate(model, glm::vec3(-worldSize / 2, 0, -worldSize / 2));
                         model = glm::translate(model, {block->position.x + chunk.position.x * chunkSize, block->position.y, block->position.z + chunk.position.y * chunkSize});
                         ourShader.setVec3("objectColor", block->color);
                         ourShader.setMat4("model", model);
@@ -198,18 +197,6 @@ namespace Everland
                 }
 
                 generateArea(Player::position, Player::renderDistance);
-
-                // for (Block block : blocksToRender)
-                // {
-                //     glm::mat4 model = glm::mat4(1.0f);
-                //     // model = glm::translate(model, glm::vec3(-worldSize / 2, 0, -worldSize / 2));
-                //     model = glm::translate(model, block->position);
-                //     ourShader.setVec3("objectColor", block.color);
-                //     ourShader.setMat4("model", model);
-
-                //     glBindVertexArray(cubeVAO);
-                //     glDrawArrays(GL_TRIANGLES, 0, 36);
-                // }
 
                 // GLFW swap buffers and poll IO events
                 glfwSwapBuffers(window);
@@ -235,13 +222,9 @@ namespace Everland
                 camera.MovementSpeed = 20.0f;
 
             if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
-            {
                 generateNewWorld();
-            }
             if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
-            {
                 generateTrees();
-            }
 
             if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS)
             {
@@ -272,6 +255,11 @@ namespace Everland
                 camera.ProcessKeyboard(LEFT, deltaTime);
             if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
                 camera.ProcessKeyboard(RIGHT, deltaTime);
+
+            if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT))
+                Player::breakBlock();
+            if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT))
+                Player::placeBlock();
         }
 
         void framebuffer_size_callback(GLFWwindow *window, int width, int height)

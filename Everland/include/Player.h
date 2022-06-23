@@ -3,12 +3,18 @@
 
 #include "Core.h"
 
+#include "World.h"
+
 namespace Everland
 {
     namespace Player
     {
         extern glm::vec3 position;
-        const int renderDistance = 2;
+        extern int renderDistance;
+        extern int playerRange;
+
+        void breakBlock();
+        void placeBlock();
     }
 }
 
