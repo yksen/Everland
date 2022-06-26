@@ -30,6 +30,14 @@ namespace Everland
         {0.384, 0.980, 0.239},
         {0.101, 0.670, 0.917}};
 
+    const std::vector<glm::vec3> adjacentCoordinates{
+        {-1, 0, 0},
+        {1, 0, 0},
+        {0, 0, -1},
+        {0, 0, 1},
+        {0, -1, 0},
+        {0, 1, 0}};
+
     extern std::map<std::pair<int, int>, Chunk> chunks;
     extern std::vector<std::vector<float>> noiseMap;
 
@@ -52,19 +60,18 @@ namespace Everland
     void generateTerrain(Chunk *chunk);
     void generateTrees();
 
-    bool isVisible(int x, int z, int y);
-
     struct Block
     {
+        std::pair<int, int> chunkPosition;
         BlockType type;
         glm::vec3 position;
         glm::vec3 color;
 
-        Block() : type(BlockType::Air), position(glm::vec3{0, 0, 0}), color(glm::vec3{0, 0, 0})
+        Block(std::pair<int, int> chunkPosition) : chunkPosition(chunkPosition), type(BlockType::Air), position(glm::vec3{0, 0, 0}), color(glm::vec3{0, 0, 0})
         {
         }
 
-        Block(BlockType type, glm::vec3 position) : type(type), position(position)
+        Block(std::pair<int, int> chunkPosition, BlockType type, glm::vec3 position) : chunkPosition(chunkPosition), type(type), position(position)
         {
             color = blockColors[type];
         }
@@ -78,6 +85,25 @@ namespace Everland
         void setPosition(glm::vec3 _position)
         {
             position = _position;
+        }
+
+        bool isVisible()
+        {
+            if (type == Air)
+                return false;
+
+            // for (auto rel : adjacentCoordinates)
+            // {
+            //     glm::vec3 relPos{position.x + rel.x, position.y + rel.y, position.z + rel.z};
+            //     if (std::max({relPos.x, relPos.y, relPos.z}) > 15 || std::min({relPos.x, relPos.y, relPos.z}) < 0)
+            //         return true;
+            //     if (chunks.count(chunkPosition) > 0)
+            //         if (chunks[chunkPosition].blocks[relPos.x][relPos.y][relPos.z].type == Air)
+            //             return true;
+            // }
+
+            return true;
+            // return false;
         }
     };
 
@@ -93,7 +119,7 @@ namespace Everland
 
         Chunk(glm::vec2 pos) : position(pos)
         {
-            blocks.resize(chunkSize, std::vector<std::vector<Block>>(chunkSize, std::vector<Block>(maxWorldHeight + 1)));
+            blocks.resize(chunkSize, std::vector<std::vector<Block>>(chunkSize, std::vector<Block>(maxWorldHeight + 1, Block{{position.x, position.y}})));
             generateChunk(this);
         }
 
@@ -103,7 +129,7 @@ namespace Everland
             for (size_t x = 0; x < chunkSize; ++x)
                 for (size_t z = 0; z < chunkSize; ++z)
                     for (size_t y = seaLevel; y < maxWorldHeight; ++y)
-                        if (blocks[x][z][y].type != Air && blocks[x][z][y + 1].type == Air)
+                        if (blocks[x][z][y].isVisible())
                             visibleBlocks.push_back(&blocks[x][z][y]);
         }
     };

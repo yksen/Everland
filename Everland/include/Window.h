@@ -15,7 +15,6 @@ namespace Everland
         extern GLFWwindow *window;
 
         void init();
-        void checkVisibility();
 
         void processInput(GLFWwindow *window);
         void framebuffer_size_callback(GLFWwindow *window, int width, int height);

@@ -56,8 +56,8 @@ namespace Everland
         float lastFrame = 0.0f;
 
         // Settings
-        const unsigned int SCR_WIDTH = 1280;
-        const unsigned int SCR_HEIGHT = 720;
+        const unsigned int SCR_WIDTH = 1920;
+        const unsigned int SCR_HEIGHT = 1080;
 
         // Camera
         Camera camera(glm::vec3(0.0f, 80.0f, 0.0f));
@@ -96,7 +96,7 @@ namespace Everland
                 window = glfwCreateWindow(mode->width, mode->height, "Everland", glfwGetPrimaryMonitor(), NULL);
             }
             else
-                window = glfwCreateWindow(1280, 720, "Everland", NULL, NULL);
+                window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Everland", NULL, NULL);
 
             if (window == NULL)
             {

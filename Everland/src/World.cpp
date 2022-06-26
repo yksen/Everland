@@ -21,8 +21,6 @@ namespace Everland
     void generateTerrain(Chunk *chunk);
     void generateTrees();
 
-    bool isVisible(int x, int z, int y);
-
     void generateNewWorld()
     {
         chunks.clear();
@@ -97,7 +95,7 @@ namespace Everland
 
     void generateTerrain(Chunk *chunk)
     {
-        chunk->blocks.resize(chunkSize, std::vector<std::vector<Block>>(chunkSize));
+        // chunk->blocks.resize(chunkSize, std::vector<std::vector<Block>>(chunkSize));
 
         for (int x = 0; x < chunkSize; ++x)
         {
@@ -173,31 +171,5 @@ namespace Everland
         //                         }
         //         }
         //     }
-    }
-
-    bool isVisible(int x, int z, int y)
-    {
-        // if (world[x][z][y].type == Air)
-        //     return false;
-
-        // std::vector<glm::vec3> adjacentCoordinates{
-        //     {-1, 0, 0}, {1, 0, 0}, {0, -1, 0}, {0, 1, 0}, {0, 0, -1}, {0, 0, 1}};
-
-        // // if (x == 0 || z == 0)
-        // //     return true;
-        // // if (x == worldSize - 1 || z == worldSize - 1)
-        // //     return true;
-
-        // for (glm::vec3 relPos : adjacentCoordinates)
-        // {
-        //     if (x + relPos.x < 0 || z + relPos.z < 0 || y + relPos.y < 0)
-        //         continue;
-        //     if (x + relPos.x > worldSize - 1 || z + relPos.z > worldSize - 1 || y + relPos.y > worldSize - 1)
-        //         continue;
-        //     if (world[x + relPos.x][z + relPos.z][y + relPos.y].type == Air)
-        //         return true;
-        // }
-        return true;
-        // return false;
     }
 }
