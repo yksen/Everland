@@ -5,7 +5,7 @@ namespace Everland
     namespace Player
     {
         glm::vec3 position{0.0f, 0.0f, 0.0f};
-        int renderDistance = 100;
+        int renderDistance = 1;
         int playerRange = 5;
 
         void breakBlock()

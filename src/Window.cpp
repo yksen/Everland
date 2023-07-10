@@ -122,7 +122,7 @@ namespace Everland
             glEnable(GL_DEPTH_TEST);
 
             // Shader Program
-            Shader ourShader("../../assets/shaders/vShader.glsl", "../../assets/shaders/fShader.glsl");
+            Shader ourShader("assets/shaders/vShader.glsl", "assets/shaders/fShader.glsl");
 
             unsigned int VBO, cubeVAO;
             glGenVertexArrays(1, &cubeVAO);
