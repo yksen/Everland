@@ -1,7 +1,6 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#pragma once
 
-#include "Core.h"
+#include "Core.hpp"
 
 namespace Everland
 {
@@ -55,4 +54,3 @@ namespace Everland
         void updateCameraVectors();
     };
 }
-#endif

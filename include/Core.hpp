@@ -1,5 +1,4 @@
-#ifndef CORE_H
-#define CORE_H
+#pragma once
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -15,5 +14,3 @@
 #include <map>
 #include <random>
 #include <vector>
-
-#endif

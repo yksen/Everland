@@ -1,9 +1,7 @@
-#ifndef WORLD_H
-#define WORLD_H
+#pragma once
 
-#include "Core.h"
-
-#include "Player.h"
+#include "Core.hpp"
+#include "Player.hpp"
 
 namespace Everland
 {
@@ -134,5 +132,3 @@ namespace Everland
         }
     };
 }
-
-#endif

@@ -1,9 +1,7 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#pragma once
 
-#include "Core.h"
-
-#include "World.h"
+#include "Core.hpp"
+#include "World.hpp"
 
 namespace Everland
 {
@@ -18,5 +16,3 @@ namespace Everland
         int globalToLocal(int global);
     }
 }
-
-#endif

@@ -1,12 +1,10 @@
-#ifndef WINDOW_H
-#define WINDOW_H
+#pragma once
 
-#include "Core.h"
-
-#include "Camera.h"
-#include "Player.h"
-#include "Shader.h"
-#include "World.h"
+#include "Core.hpp"
+#include "Camera.hpp"
+#include "Player.hpp"
+#include "Shader.hpp"
+#include "World.hpp"
 
 namespace Everland
 {
@@ -22,5 +20,3 @@ namespace Everland
         void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
     }
 }
-
-#endif
