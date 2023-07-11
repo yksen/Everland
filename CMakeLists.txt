@@ -3,5 +3,5 @@ project(Everland LANGUAGES CXX)
 
 file(COPY ${CMAKE_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})
 
-add_subdirectory(lib/glad)
+add_subdirectory(lib)
 add_subdirectory(src)

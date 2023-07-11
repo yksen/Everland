@@ -1,6 +1,6 @@
-[submodule "Everland/include/glm"]
-	path = Everland/include/glm
+[submodule "lib/glm"]
+	path = lib/glm
 	url = https://github.com/g-truc/glm/
-[submodule "Everland/include/GLFW"]
-	path = Everland/include/GLFW
+[submodule "lib/glfw"]
+	path = lib/glfw
 	url = https://github.com/glfw/glfw
