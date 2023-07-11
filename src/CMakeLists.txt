@@ -16,4 +16,8 @@ include_directories(${INCLUDES})
 
 add_executable(Everland ${SOURCES})
 
-target_link_libraries(Everland PRIVATE gdi32 glad glfw3 glm)
+if (MSVC)
+    target_link_libraries(Everland PRIVATE gdi32 glad glfw glm)
+else()
+    target_link_libraries(Everland PRIVATE gdi32 glad glfw3 glm)
+endif()
