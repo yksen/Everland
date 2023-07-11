@@ -7,8 +7,17 @@ set(SOURCES
     main.cpp
 )
 
-include_directories(${CMAKE_SOURCE_DIR}/include)
+set(INCLUDES
+    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/lib/glfw/include
+)
+
+include_directories(${INCLUDES})
 
 add_executable(Everland ${SOURCES})
 
-target_link_libraries(Everland PRIVATE glfw3 gdi32 glad)
+if (MSVC)
+    target_link_libraries(Everland PRIVATE gdi32 glad glfw glm)
+else()
+    target_link_libraries(Everland PRIVATE gdi32 glad glfw3 glm)
+endif()
