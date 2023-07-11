@@ -11,4 +11,4 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 
 add_executable(Everland ${SOURCES})
 
-target_link_libraries(Everland PRIVATE glfw3 gdi32 glad)
+target_link_libraries(Everland PRIVATE gdi32 glad glfw glm)
