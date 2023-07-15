@@ -1,7 +1,8 @@
 #include "Application.hpp"
 #include "raylib.h"
 
-Application::Application(bool debugModeEnabled) : debugModeEnabled(debugModeEnabled)
+Application::Application(const ApplicationOptions &options)
+    : options(options)
 {
     InitWindow(GetMonitorWidth(0), GetMonitorHeight(0), "Everland");
     SetTargetFPS(60);

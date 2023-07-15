@@ -1,13 +1,18 @@
 #pragma once
 
+struct ApplicationOptions
+{
+    bool debugModeEnabled = false;
+};
+
 class Application
 {
 public:
-    Application(bool debugModeEnabled = false);
+    Application(const ApplicationOptions &options);
     ~Application() = default;
 
     void gameLoop();
 
 private:
-    bool debugModeEnabled;
+    ApplicationOptions options;
 };
