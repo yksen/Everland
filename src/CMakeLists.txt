@@ -1,3 +1,5 @@
+add_compile_options(-Wall -Wextra -Wpedantic -Werror)
+
 set(SOURCES
     Application.cpp
     # Camera.cpp
