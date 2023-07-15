@@ -1,16 +1,22 @@
 #include "Application.hpp"
+#include "raylib.h"
 
-namespace Everland
+Application::Application(bool debugModeEnabled) : debugModeEnabled(debugModeEnabled)
 {
-    namespace Application
-    {
-        void init()
-        {
-            Window::init();
+    InitWindow(GetMonitorWidth(0), GetMonitorHeight(0), "Everland");
+    SetTargetFPS(60);
 
-            // GLFW Termination
-            glfwTerminate();
-            return;
-        }
+    gameLoop();
+}
+
+void Application::gameLoop()
+{
+    while (!WindowShouldClose())
+    {
+        BeginDrawing();
+        ClearBackground(BLACK);
+        EndDrawing();
     }
+
+    CloseWindow();
 }

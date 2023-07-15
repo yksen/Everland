@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <iomanip>
+#include <iostream>
 #include <optional>
 #include <string>
 
@@ -34,6 +35,8 @@ int main(int argc, char **argv)
     }
 
     bool debugModeEnabled = (optionExists(argv, argv + argc, "-d") || optionExists(argv, argv + argc, "--debug"));
+
+    Application app(debugModeEnabled);
 
     return 0;
 }

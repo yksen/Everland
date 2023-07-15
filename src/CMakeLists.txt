@@ -1,5 +1,5 @@
 set(SOURCES
-    # Application.cpp
+    Application.cpp
     # Camera.cpp
     # Player.cpp
     # Window.cpp

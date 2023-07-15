@@ -1,12 +1,13 @@
 #pragma once
 
-#include "Core.hpp"
-#include "Window.hpp"
-
-namespace Everland
+class Application
 {
-    namespace Application
-    {
-        void init();
-    }
-}
+public:
+    Application(bool debugModeEnabled = false);
+    ~Application() = default;
+
+    void gameLoop();
+
+private:
+    bool debugModeEnabled;
+};
