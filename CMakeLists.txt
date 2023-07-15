@@ -11,3 +11,9 @@ set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
 
 add_subdirectory(lib)
 add_subdirectory(src)
+
+add_custom_target(run
+    COMMAND ${CMAKE_BINARY_DIR}/src/Everland.exe
+    DEPENDS Everland
+    WORKING_DIRECTORY ${CMAKE_PROJECT_DIR}
+)

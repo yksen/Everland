@@ -1,9 +1,9 @@
 set(SOURCES
-    Application.cpp
-    Camera.cpp
-    Player.cpp
-    Window.cpp
-    World.cpp
+    # Application.cpp
+    # Camera.cpp
+    # Player.cpp
+    # Window.cpp
+    # World.cpp
     main.cpp
 )
 
