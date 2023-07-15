@@ -1,8 +1,10 @@
 #pragma once
 
 #include "Game.hpp"
+#include "World.hpp"
 
 #include <memory>
+#include <vector>
 
 struct ApplicationOptions
 {
@@ -27,4 +29,5 @@ public:
 private:
     ApplicationOptions options;
     std::unique_ptr<Game> game;
+    std::vector<std::unique_ptr<World>> worlds;
 };

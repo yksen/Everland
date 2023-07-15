@@ -7,12 +7,13 @@ Application::Application(const ApplicationOptions &options)
     InitWindow(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()), "Everland");
     SetTargetFPS(144);
 
-    game = std::make_unique<Game>();
     appLoop();
 }
 
 void Application::processInput()
 {
+    if (IsKeyPressed(KEY_N))
+        game = std::make_unique<Game>(std::make_unique<World>("New World"));
 }
 
 void Application::update()
@@ -36,7 +37,6 @@ void Application::appLoop()
         {
             game->gameLoop();
             game.release();
-            SetExitKey(KEY_ESCAPE);
         }
         else
         {

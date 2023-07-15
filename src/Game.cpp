@@ -1,6 +1,8 @@
 #include "Game.hpp"
+#include "raylib.h"
 
-Game::Game()
+Game::Game(std::unique_ptr<World> &&world)
+    : world{std::move(world)}
 {
     SetExitKey(KEY_NULL);
 }
@@ -18,6 +20,7 @@ void Game::draw()
     BeginDrawing();
     {
         ClearBackground(GREEN);
+        DrawText(world->name.c_str(), 10, 10, 20, BLACK);
     }
     EndDrawing();
 }
@@ -30,4 +33,5 @@ void Game::gameLoop()
         update();
         draw();
     }
+    SetExitKey(KEY_ESCAPE);
 }

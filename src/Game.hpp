@@ -1,11 +1,13 @@
 #pragma once
 
-#include "raylib.h"
+#include "World.hpp"
+
+#include <memory>
 
 class Game
 {
 public:
-    Game();
+    Game(std::unique_ptr<World> &&world);
     Game(const Game &) = delete;
     Game(Game &&) = delete;
     Game &operator=(const Game &) = delete;
@@ -18,4 +20,5 @@ public:
     void gameLoop();
 
 private:
+    std::unique_ptr<World> world;
 };
