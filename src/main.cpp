@@ -4,7 +4,7 @@
 int main(int argc, char **argv)
 {
     auto options = parseCommandLineInput(argc, argv);
-    Application app(options);
+    std::make_unique<Application>(std::move(options));
 
     return 0;
 }

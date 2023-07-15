@@ -1,5 +1,6 @@
 set(SOURCES
     Application.cpp
+    Game.cpp
     main.cpp
 )
 

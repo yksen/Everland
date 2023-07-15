@@ -4,20 +4,46 @@
 Application::Application(const ApplicationOptions &options)
     : options(options)
 {
-    InitWindow(GetMonitorWidth(0), GetMonitorHeight(0), "Everland");
-    SetTargetFPS(60);
+    InitWindow(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()), "Everland");
+    SetTargetFPS(144);
 
-    gameLoop();
+    game = std::make_unique<Game>();
+    appLoop();
 }
 
-void Application::gameLoop()
+void Application::processInput()
+{
+}
+
+void Application::update()
+{
+}
+
+void Application::draw()
+{
+    BeginDrawing();
+    {
+        ClearBackground(BLACK);
+    }
+    EndDrawing();
+}
+
+void Application::appLoop()
 {
     while (!WindowShouldClose())
     {
-        BeginDrawing();
-        ClearBackground(BLACK);
-        EndDrawing();
+        if (game)
+        {
+            game->gameLoop();
+            game.release();
+            SetExitKey(KEY_ESCAPE);
+        }
+        else
+        {
+            processInput();
+            update();
+            draw();
+        }
     }
-
     CloseWindow();
 }
