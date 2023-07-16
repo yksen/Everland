@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Game.hpp"
-#include "World.hpp"
+#include "world/World.hpp"
 
 #include <memory>
 #include <vector>

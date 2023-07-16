@@ -1,7 +1,8 @@
 set(SOURCES
     Application.cpp
     Game.cpp
-    World.cpp
+    world/World.cpp
+    world/Generator.cpp
     main.cpp
 )
 
@@ -14,3 +15,5 @@ if (MSVC)
 else()
     target_compile_options(Everland PRIVATE -Wall -Wextra -pedantic)
 endif()
+
+target_include_directories(Everland PRIVATE ${CMAKE_SOURCE_DIR}/src)
