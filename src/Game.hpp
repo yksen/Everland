@@ -21,4 +21,6 @@ private:
     void gameLoop();
 
     std::unique_ptr<World> world;
+    Camera camera{0};
+    Vector3 playerPosition{0.0f, 0.0f, 0.0f};
 };

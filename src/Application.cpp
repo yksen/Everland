@@ -1,8 +1,7 @@
 #include "Application.hpp"
 #include "raylib.h"
 
-Application::Application(const ApplicationOptions &options)
-    : options(options)
+Application::Application(const ApplicationOptions &options) : options{options}
 {
     InitWindow(GetScreenWidth(), GetScreenHeight(), "Everland");
     SetTargetFPS(144);
@@ -14,7 +13,7 @@ Application::Application(const ApplicationOptions &options)
 void Application::processInput()
 {
     if (IsKeyPressed(KEY_N))
-        game = std::make_unique<Game>(std::make_unique<World>("New World"));
+        game = std::make_unique<Game>(std::make_unique<World>("New World", std::make_unique<FlatGenerator>()));
 }
 
 void Application::update()

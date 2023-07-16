@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Generator.hpp"
+#include "raylib.h"
+
 #include <chrono>
 #include <filesystem>
 #include <memory>
@@ -11,9 +14,11 @@ namespace fs = std::filesystem;
 class World
 {
 public:
-    World(const std::string &name);
+    World(const std::string &name, std::unique_ptr<Generator> &&generator);
     World(const fs::directory_entry &worldDirectory);
     ~World();
+
+    void draw(Vector3 playerPosition, Vector3 playerDirection, int renderDistance);
 
     std::string name;
     std::chrono::time_point<std::chrono::steady_clock> creationTime;
@@ -23,6 +28,7 @@ private:
     void saveToFile();
 
     fs::directory_entry worldDirectory;
+    std::unique_ptr<Generator> generator;
 };
 
 std::vector<std::unique_ptr<World>> discoverLocalWorlds();
