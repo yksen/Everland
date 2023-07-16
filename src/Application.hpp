@@ -21,12 +21,12 @@ public:
     Application &operator=(Application &&) = delete;
     ~Application() = default;
 
+private:
     void processInput();
     void update();
     void draw();
     void appLoop();
 
-private:
     ApplicationOptions options;
     std::unique_ptr<Game> game;
     std::vector<std::unique_ptr<World>> worlds;

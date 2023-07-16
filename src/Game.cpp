@@ -5,6 +5,7 @@ Game::Game(std::unique_ptr<World> &&world)
     : world{std::move(world)}
 {
     SetExitKey(KEY_NULL);
+    gameLoop();
 }
 
 void Game::processInput()
@@ -33,5 +34,6 @@ void Game::gameLoop()
         update();
         draw();
     }
+    world.reset();
     SetExitKey(KEY_ESCAPE);
 }

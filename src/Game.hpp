@@ -14,11 +14,11 @@ public:
     Game &operator=(Game &&) = delete;
     ~Game() = default;
 
+private:
     void processInput();
     void update();
     void draw();
     void gameLoop();
 
-private:
     std::unique_ptr<World> world;
 };
