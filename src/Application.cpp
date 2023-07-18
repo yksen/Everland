@@ -6,7 +6,7 @@ Application::Application(const ApplicationOptions &options) : options{options}
     window.Init(GetScreenWidth(), GetScreenHeight(), "Everland");
     window.SetTargetFPS(0);
 
-    worlds = discoverLocalWorlds();
+    worlds = World::discoverLocalWorlds();
     appLoop();
 }
 
@@ -31,11 +31,16 @@ void Application::draw()
     {
         ClearBackground(BLACK);
         window.DrawFPS(10, 10);
-        DrawText("Everland", centerTextHorizontally("Everland", 100), 50, 100, WHITE);
-        for (uint32_t i = 0; i < worlds.size(); ++i)
-            DrawText(worlds[i]->name.c_str(), centerTextHorizontally(worlds[i]->name, 50), 200 + 100 * i, 50, WHITE);
+        drawMenu();
     }
     EndDrawing();
+}
+
+void Application::drawMenu()
+{
+    DrawText("Everland", centerTextHorizontally("Everland", 100), 50, 100, WHITE);
+    for (uint32_t i = 0; i < worlds.size(); ++i)
+        DrawText(worlds[i]->name.c_str(), centerTextHorizontally(worlds[i]->name, 50), 200 + 100 * i, 50, WHITE);
 }
 
 void Application::appLoop()

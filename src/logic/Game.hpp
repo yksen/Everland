@@ -1,8 +1,12 @@
 #pragma once
 
-#include "world/World.hpp"
+#include "raylib-cpp.hpp"
+
+#include <world/World.hpp>
 
 #include <memory>
+
+namespace rl = raylib;
 
 class Game
 {
@@ -21,6 +25,6 @@ private:
     void gameLoop();
 
     std::unique_ptr<World> world;
-    Camera camera{0};
+    rl::Camera camera;
     Vector3 playerPosition{0.0f, 0.0f, 0.0f};
 };

@@ -1,12 +1,12 @@
 #include "Generator.hpp"
 
-Chunk::Chunk(const Vector2 &coordinates) : coordinates{coordinates}
+Chunk::Chunk(const rl::Vector2 &coordinates) : coordinates{coordinates}
 {
     blocks = std::vector<std::vector<std::vector<bool>>>(
         size, std::vector<std::vector<bool>>(size, std::vector<bool>(height, false)));
 }
 
-void Chunk::draw(Vector3 playerPosition, Vector3 playerDirection)
+void Chunk::draw(rl::Vector3 playerPosition, rl::Vector3 playerDirection)
 {
     for (float x = 0.0f; x < size; ++x)
         for (float y = 0.0f; y < size; ++y)
@@ -15,7 +15,7 @@ void Chunk::draw(Vector3 playerPosition, Vector3 playerDirection)
                     DrawCubeWiresV({x, y, z}, {1.0f, 1.0f, 1.0f}, WHITE);
 }
 
-Chunk FlatGenerator::generateChunk(Vector2 coordinates)
+Chunk FlatGenerator::generateChunk(rl::Vector2 coordinates)
 {
     Chunk chunk{coordinates};
 

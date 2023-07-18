@@ -2,8 +2,8 @@
 
 #include "raylib-cpp.hpp"
 
-#include "Game.hpp"
-#include "world/World.hpp"
+#include <logic/Game.hpp>
+#include <world/World.hpp>
 
 #include <memory>
 #include <vector>
@@ -29,6 +29,7 @@ private:
     void processInput();
     void update();
     void draw();
+    void drawMenu();
     void appLoop();
 
     rl::Window window;
