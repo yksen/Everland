@@ -1,10 +1,10 @@
 #include "Application.hpp"
-#include "raylib.h"
+#include "raylib-cpp.hpp"
 
 Application::Application(const ApplicationOptions &options) : options{options}
 {
-    InitWindow(GetScreenWidth(), GetScreenHeight(), "Everland");
-    SetTargetFPS(144);
+    window.Init(GetScreenWidth(), GetScreenHeight(), "Everland");
+    window.SetTargetFPS(0);
 
     worlds = discoverLocalWorlds();
     appLoop();
@@ -30,7 +30,7 @@ void Application::draw()
     BeginDrawing();
     {
         ClearBackground(BLACK);
-        DrawFPS(10, 10);
+        window.DrawFPS(10, 10);
         DrawText("Everland", centerTextHorizontally("Everland", 100), 50, 100, WHITE);
         for (uint32_t i = 0; i < worlds.size(); ++i)
             DrawText(worlds[i]->name.c_str(), centerTextHorizontally(worlds[i]->name, 50), 200 + 100 * i, 50, WHITE);

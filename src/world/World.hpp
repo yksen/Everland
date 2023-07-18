@@ -1,7 +1,8 @@
 #pragma once
 
+#include "raylib-cpp.hpp"
+
 #include "Generator.hpp"
-#include "raylib.h"
 
 #include <chrono>
 #include <filesystem>
@@ -10,6 +11,7 @@
 #include <vector>
 
 namespace fs = std::filesystem;
+namespace rl = raylib;
 
 class World
 {
@@ -18,7 +20,7 @@ public:
     World(const fs::directory_entry &worldDirectory);
     ~World();
 
-    void draw(Vector3 playerPosition, Vector3 playerDirection, int renderDistance);
+    void draw(rl::Vector3 playerPosition, rl::Vector3 playerDirection, int renderDistance);
 
     std::string name;
     std::chrono::time_point<std::chrono::steady_clock> creationTime;

@@ -1,10 +1,14 @@
 #pragma once
 
+#include "raylib-cpp.hpp"
+
 #include "Game.hpp"
 #include "world/World.hpp"
 
 #include <memory>
 #include <vector>
+
+namespace rl = raylib;
 
 struct ApplicationOptions
 {
@@ -27,6 +31,7 @@ private:
     void draw();
     void appLoop();
 
+    rl::Window window;
     ApplicationOptions options;
     std::unique_ptr<Game> game;
     std::vector<std::unique_ptr<World>> worlds;

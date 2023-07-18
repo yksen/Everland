@@ -13,9 +13,9 @@ target_include_directories(Everland SYSTEM PRIVATE ${CMAKE_SOURCE_DIR}/lib/rayli
 target_link_libraries(Everland PRIVATE raylib raylib_cpp)
 
 if (MSVC)
-target_compile_options(Everland PRIVATE /W4)
+    target_compile_options(Everland PRIVATE /W4)
 else()
-target_compile_options(Everland PRIVATE -Wall -Wextra -pedantic)
+    target_compile_options(Everland PRIVATE -Wall -Wextra -pedantic)
 endif()
 
 file(COPY ${CMAKE_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})
