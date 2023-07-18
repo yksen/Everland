@@ -1,7 +1,8 @@
 set(SOURCES
     main.cpp
     Application.cpp
-    Game.cpp
+    logic/Game.cpp
+    logic/Player.cpp
     world/World.cpp
     world/Generator.cpp
 )
@@ -18,4 +19,4 @@ else()
     target_compile_options(Everland PRIVATE -Wall -Wextra -pedantic)
 endif()
 
-file(COPY ${CMAKE_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/resources DESTINATION ${CMAKE_BINARY_DIR})
