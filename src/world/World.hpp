@@ -17,10 +17,10 @@ class World
 {
 public:
     static std::vector<std::unique_ptr<World>> discoverLocalWorlds();
-    static const fs::path worldsDirectoryPath;
+    static const std::string worldsDirectoryPath;
 
     World(const std::string &name, std::unique_ptr<Generator> &&generator);
-    World(const fs::directory_entry &worldDirectory);
+    World(const std::string &worldDirectory);
     ~World();
 
     void draw(rl::Vector3 playerPosition, rl::Vector3 playerDirection, int renderDistance);
@@ -30,8 +30,8 @@ public:
     std::chrono::time_point<std::chrono::steady_clock> lastPlayedTime;
 
 private:
-    void saveToFile();
+    void saveInfo();
 
-    fs::directory_entry worldDirectory;
+    std::string worldDirectory;
     std::unique_ptr<Generator> generator;
 };
