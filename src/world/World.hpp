@@ -30,7 +30,7 @@ public:
     std::chrono::time_point<std::chrono::steady_clock> lastPlayedTime;
 
 private:
-    void saveToFile();
+    void saveInfo();
 
     fs::directory_entry worldDirectory;
     std::unique_ptr<Generator> generator;
