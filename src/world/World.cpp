@@ -4,7 +4,8 @@
 #include <fstream>
 #include <memory>
 
-const std::string World::worldsDirectoryPath = std::string(getenv("APPDATA")) + "\\Everland\\worlds";
+const fs::path World::worldsDirectoryPath =
+    fs::temp_directory_path().parent_path().parent_path().parent_path() / "Roaming\\Everland\\worlds";
 
 std::vector<std::unique_ptr<World>> World::discoverLocalWorlds()
 {
@@ -15,22 +16,23 @@ std::vector<std::unique_ptr<World>> World::discoverLocalWorlds()
 
     for (auto &worldDirectory : fs::directory_iterator(worldsDirectoryPath))
         if (fs::is_directory(worldDirectory))
-            worlds.emplace_back(std::make_unique<World>(worldDirectory.path().filename().string()));
+            worlds.emplace_back(std::make_unique<World>(worldDirectory));
 
     return worlds;
 }
 
 World::World(const std::string &name, std::unique_ptr<Generator> &&generator)
     : name{name}, creationTime{std::chrono::steady_clock::now()}, lastPlayedTime{std::chrono::steady_clock::now()},
-      worldDirectory{worldsDirectoryPath + "\\" + name}, generator{std::move(generator)}
+      worldDirectory{worldsDirectoryPath / name}, generator{std::move(generator)}
 {
     if (!fs::exists(worldDirectory))
         fs::create_directories(worldDirectory);
 }
 
-World::World(const std::string &worldDirectory) : name{worldDirectory}, worldDirectory(worldDirectory)
+World::World(const fs::directory_entry &worldDirectory)
+    : name{worldDirectory.path().filename().string()}, worldDirectory(worldDirectory)
 {
-    std::ifstream worldFile(worldDirectory + "\\world.info", std::ios::in);
+    std::ifstream worldFile(worldDirectory.path() / "world.info", std::ios::in);
     worldFile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     int64_t creationTimeCount;
     worldFile >> creationTimeCount;
@@ -44,7 +46,7 @@ World::World(const std::string &worldDirectory) : name{worldDirectory}, worldDir
 
 World::~World()
 {
-    saveInfo();
+    saveToFile();
 }
 
 void World::draw(rl::Vector3 playerPosition, rl::Vector3 playerDirection, int renderDistance)
@@ -60,12 +62,11 @@ void World::draw(rl::Vector3 playerPosition, rl::Vector3 playerDirection, int re
             }
 }
 
-void World::saveInfo()
+void World::saveToFile()
 {
-    auto worldFilePath = worldDirectory + "\\world.info";
-
-    std::string worldInfo = name + '\n' + std::to_string(creationTime.time_since_epoch().count()) + '\n' +
-                            std::to_string(std::chrono::steady_clock::now().time_since_epoch().count());
-
-    SaveFileText(worldFilePath.c_str(), const_cast<char *>(worldInfo.c_str()));
+    auto worldFilePath = worldDirectory.path() / "world.info";
+    std::ofstream worldFile(worldFilePath, std::ios::out | std::ios::trunc);
+    worldFile << name << std::endl;
+    worldFile << creationTime.time_since_epoch().count() << std::endl;
+    worldFile << std::chrono::steady_clock::now().time_since_epoch().count() << std::endl;
 }
