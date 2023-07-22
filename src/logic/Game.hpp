@@ -2,6 +2,7 @@
 
 #include "raylib-cpp.hpp"
 
+#include "Player.hpp"
 #include <world/World.hpp>
 
 #include <memory>
@@ -25,6 +26,5 @@ private:
     void gameLoop();
 
     std::unique_ptr<World> world;
-    rl::Camera camera;
-    Vector3 playerPosition{0.0f, 0.0f, 0.0f};
+    std::unique_ptr<Player> player;
 };

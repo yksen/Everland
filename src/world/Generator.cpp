@@ -9,21 +9,36 @@ Chunk::Chunk(const rl::Vector2 &coordinates) : coordinates{coordinates}
 void Chunk::draw(rl::Vector3 playerPosition, rl::Vector3 playerDirection)
 {
     for (float x = 0.0f; x < size; ++x)
-        for (float y = 0.0f; y < size; ++y)
-            for (float z = 0.0f; z < height; ++z)
-                if (blocks[x][y][z])
+        for (float z = 0.0f; z < size; ++z)
+            for (float y = 0.0f; y < height; ++y)
+                if (blocks[x][z][y])
                     DrawCubeWiresV({x, y, z}, {1.0f, 1.0f, 1.0f}, WHITE);
 }
 
-Chunk FlatGenerator::generateChunk(rl::Vector2 coordinates)
+Chunk Generator::generateChunk(const rl::Vector2 &coordinates)
 {
     Chunk chunk{coordinates};
 
-    for (int x = 0; x < Chunk::size; ++x)
-        for (int y = 0; y < Chunk::size; ++y)
-            for (int z = 0; z < Chunk::height; ++z)
-                if (z < seaLevel)
-                    chunk.blocks[x][y][z] = true;
+    generateTerrain(chunk);
+    generateBiomes(chunk);
+    generateFeatures(chunk);
 
     return chunk;
+}
+
+void FlatGenerator::generateTerrain(Chunk &chunk)
+{
+    for (int x = 0; x < Chunk::size; ++x)
+        for (int z = 0; z < Chunk::size; ++z)
+            for (int y = 0; y < Chunk::height; ++y)
+                if (y < seaLevel)
+                    chunk.blocks[x][z][y] = true;
+}
+
+void FlatGenerator::generateBiomes(Chunk &chunk)
+{
+}
+
+void FlatGenerator::generateFeatures(Chunk &chunk)
+{
 }

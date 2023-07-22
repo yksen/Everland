@@ -24,7 +24,10 @@ class Generator
 public:
     virtual ~Generator() = default;
 
-    virtual Chunk generateChunk(rl::Vector2 coordinates) = 0;
+    virtual Chunk generateChunk(const rl::Vector2 &coordinates);
+    virtual void generateTerrain(Chunk &chunk) = 0;
+    virtual void generateBiomes(Chunk &chunk) = 0;
+    virtual void generateFeatures(Chunk &chunk) = 0;
 };
 
 class FlatGenerator : public Generator
@@ -32,7 +35,9 @@ class FlatGenerator : public Generator
 public:
     FlatGenerator() = default;
 
-    Chunk generateChunk(rl::Vector2 coordinates) override;
+    void generateTerrain(Chunk &chunk) override;
+    void generateBiomes(Chunk &chunk) override;
+    void generateFeatures(Chunk &chunk) override;
 
 private:
     static constexpr int seaLevel{1};
