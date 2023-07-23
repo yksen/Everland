@@ -50,15 +50,15 @@ World::~World()
 
 void World::draw(rl::Vector3 playerPosition, rl::Vector3 playerDirection, int renderDistance)
 {
+    rl::Vector2 scaledPlayerPosition = {std::floor(playerPosition.x / Chunk::size),
+                                        std::floor(playerPosition.z / Chunk::size)};
     for (int x = -renderDistance; x <= renderDistance; ++x)
-        for (int y = -renderDistance; y <= renderDistance; ++y)
-            for (int z = -renderDistance; z <= renderDistance; ++z)
-            {
-                rl::Vector2 scaledPlayerPosition = {playerPosition.x / Chunk::size, playerPosition.z / Chunk::size};
-                rl::Vector2 chunkPosition = {scaledPlayerPosition.x + x, scaledPlayerPosition.y + z};
-                auto chunk = generator->generateChunk(chunkPosition);
-                chunk.draw(playerPosition, playerDirection);
-            }
+        for (int z = -renderDistance; z <= renderDistance; ++z)
+        {
+            rl::Vector2 chunkPosition = {scaledPlayerPosition.x + x, scaledPlayerPosition.y + z};
+            auto chunk = generator->generateChunk(chunkPosition);
+            chunk.draw(chunkPosition, playerDirection);
+        }
 }
 
 void World::saveInfo()

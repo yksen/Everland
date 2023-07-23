@@ -9,6 +9,11 @@
 
 namespace rl = raylib;
 
+struct GameOptions
+{
+    int renderDistance{2};
+};
+
 class Game
 {
 public:
@@ -27,4 +32,5 @@ private:
 
     std::unique_ptr<World> world;
     std::unique_ptr<Player> player;
+    GameOptions options;
 };
