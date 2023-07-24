@@ -13,6 +13,7 @@ Game::Game(std::unique_ptr<World> &&world) : world{std::move(world)}
 
 void Game::processInput()
 {
+    player->processInput();
 }
 
 void Game::update()
@@ -28,6 +29,7 @@ void Game::draw()
         BeginMode3D(player->camera);
         {
             world->draw(player->camera.position, player->camera.target, options.renderDistance);
+            player->draw();
         }
         EndMode3D();
         DrawText(world->name.c_str(), 10, 30, 20, BLACK);
