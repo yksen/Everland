@@ -31,6 +31,6 @@ private:
     void gameLoop();
 
     std::unique_ptr<World> world;
-    std::unique_ptr<Player> player;
+    Player player;
     GameOptions options;
 };

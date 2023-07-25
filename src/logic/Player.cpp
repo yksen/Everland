@@ -16,6 +16,37 @@ void Player::processInput()
         cameraMode = (cameraMode == CAMERA_FIRST_PERSON) ? CAMERA_THIRD_PERSON : CAMERA_FIRST_PERSON;
         camera.up = {0.0f, 1.0f, 0.0f};
     }
+
+    if (gameMode == GameMode::Creative)
+        creativeMovement();
+    else
+        survivalMovement();
+}
+
+void Player::creativeMovement()
+{
+    const float dt = GetFrameTime();
+    static constexpr float flightSpeedMultiplier{2.0f};
+    float flightSpeed{8.0f};
+
+    if (IsKeyDown(KEY_LEFT_CONTROL))
+        flightSpeed *= flightSpeedMultiplier;
+
+    if (IsKeyDown(KEY_SPACE))
+    {
+        camera.position.y += flightSpeed * dt;
+        camera.target.y += flightSpeed * dt;
+    }
+
+    if (IsKeyDown(KEY_LEFT_SHIFT))
+    {
+        camera.position.y -= flightSpeed * dt;
+        camera.target.y -= flightSpeed * dt;
+    }
+}
+
+void Player::survivalMovement()
+{
 }
 
 void Player::update()

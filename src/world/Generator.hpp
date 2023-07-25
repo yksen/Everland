@@ -22,8 +22,6 @@ struct Chunk
 class Generator
 {
 public:
-    virtual ~Generator() = default;
-
     virtual Chunk generateChunk(const rl::Vector2 &coordinates);
     virtual void generateTerrain(Chunk &chunk) = 0;
     virtual void generateBiomes(Chunk &chunk) = 0;
@@ -33,8 +31,6 @@ public:
 class FlatGenerator : public Generator
 {
 public:
-    FlatGenerator() = default;
-
     void generateTerrain(Chunk &chunk) override;
     void generateBiomes(Chunk &chunk) override;
     void generateFeatures(Chunk &chunk) override;

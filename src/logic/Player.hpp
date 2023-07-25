@@ -4,6 +4,12 @@
 
 namespace rl = raylib;
 
+enum class GameMode : bool
+{
+    Survival,
+    Creative
+};
+
 class Player
 {
 public:
@@ -18,6 +24,10 @@ public:
 private:
     friend class Game;
 
+    void creativeMovement();
+    void survivalMovement();
+
     rl::Camera3D camera;
     CameraMode cameraMode{CAMERA_FIRST_PERSON};
+    GameMode gameMode{GameMode::Creative};
 };
