@@ -1,6 +1,7 @@
 #include "World.hpp"
 #include "raylib-cpp.hpp"
 
+#include <algorithm>
 #include <fstream>
 #include <memory>
 
@@ -48,17 +49,27 @@ World::~World()
     saveInfo();
 }
 
-void World::draw(rl::Vector3 playerPosition, rl::Vector3 playerDirection, int renderDistance)
+void World::update(rl::Vector3 playerPosition, int renderDistance)
 {
     rl::Vector2 scaledPlayerPosition = {std::floor(playerPosition.x / Chunk::size),
                                         std::floor(playerPosition.z / Chunk::size)};
+
     for (int x = -renderDistance; x <= renderDistance; ++x)
         for (int z = -renderDistance; z <= renderDistance; ++z)
         {
             rl::Vector2 chunkPosition = {scaledPlayerPosition.x + x, scaledPlayerPosition.y + z};
-            auto chunk = generator->generateChunk(chunkPosition);
-            chunk.draw(chunkPosition, playerDirection);
+            auto chunk = std::find_if(chunkCache.begin(), chunkCache.end(), [chunkPosition](Chunk &chunk) {
+                return chunk.coordinates == chunkPosition;
+            });
+            if (chunk == chunkCache.end())
+                chunkCache.emplace_back(generator->generateChunk(chunkPosition));
         }
+}
+
+void World::draw(rl::Vector3 playerDirection, int renderDistance)
+{
+    for (auto chunk : chunkCache)
+        chunk.draw(playerDirection);
 }
 
 void World::saveInfo()

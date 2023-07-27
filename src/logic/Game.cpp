@@ -15,6 +15,7 @@ void Game::processInput()
 
 void Game::update()
 {
+    world->update(player.camera.position, options.renderDistance);
     player.update();
 }
 
@@ -25,7 +26,7 @@ void Game::draw()
         ClearBackground(BLUE);
         BeginMode3D(player.camera);
         {
-            world->draw(player.camera.position, player.camera.target, options.renderDistance);
+            world->draw(player.camera.target, options.renderDistance);
             player.draw();
         }
         EndMode3D();

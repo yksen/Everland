@@ -23,7 +23,8 @@ public:
     World(const fs::directory_entry &worldDirectory);
     ~World();
 
-    void draw(rl::Vector3 playerPosition, rl::Vector3 playerDirection, int renderDistance);
+    void update(rl::Vector3 playerPosition, int renderDistance);
+    void draw(rl::Vector3 playerDirection, int renderDistance);
 
     std::string name;
     std::chrono::time_point<std::chrono::steady_clock> creationTime;
@@ -34,4 +35,5 @@ private:
 
     fs::directory_entry worldDirectory;
     std::unique_ptr<Generator> generator;
+    std::vector<Chunk> chunkCache;
 };

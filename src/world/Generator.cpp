@@ -6,13 +6,13 @@ Chunk::Chunk(const rl::Vector2 &coordinates) : coordinates{coordinates}
         size, std::vector<std::vector<bool>>(size, std::vector<bool>(height, false)));
 }
 
-void Chunk::draw(rl::Vector2 chunkPosition, rl::Vector3 playerDirection)
+void Chunk::draw(rl::Vector3 playerDirection)
 {
     for (int x = 0; x < size; ++x)
         for (int z = 0; z < size; ++z)
             for (float y = 0.0f; y < height; ++y)
                 if (blocks[x][z][y])
-                    DrawCubeWiresV({chunkPosition.x * Chunk::size + x, y, chunkPosition.y * Chunk::size + z},
+                    DrawCubeWiresV({coordinates.x * Chunk::size + x, y, coordinates.y * Chunk::size + z},
                                    {1.0f, 1.0f, 1.0f}, WHITE);
 }
 
