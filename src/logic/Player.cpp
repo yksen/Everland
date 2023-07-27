@@ -17,13 +17,10 @@ void Player::processInput()
         camera.up = {0.0f, 1.0f, 0.0f};
     }
 
-    if (gameMode == GameMode::Creative)
-        creativeMovement();
-    else
-        survivalMovement();
+    processMovement();
 }
 
-void Player::creativeMovement()
+void Player::processMovement()
 {
     const float dt = GetFrameTime();
     static constexpr float flightSpeedMultiplier{2.0f};
@@ -43,10 +40,6 @@ void Player::creativeMovement()
         camera.position.y -= flightSpeed * dt;
         camera.target.y -= flightSpeed * dt;
     }
-}
-
-void Player::survivalMovement()
-{
 }
 
 void Player::update()

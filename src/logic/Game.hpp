@@ -11,7 +11,7 @@ namespace rl = raylib;
 
 struct GameOptions
 {
-    int renderDistance{2};
+    int renderDistance{4};
 };
 
 class Game

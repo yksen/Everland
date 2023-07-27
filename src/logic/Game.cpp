@@ -33,7 +33,11 @@ void Game::draw()
         std::string cameraPosition = std::to_string(player.camera.position.x) + "\t" +
                                      std::to_string(player.camera.position.y) + "\t" +
                                      std::to_string(player.camera.position.z);
+        std::string cameraTarget = std::to_string(player.camera.target.x) + "\t" +
+                                   std::to_string(player.camera.target.y) + "\t" +
+                                   std::to_string(player.camera.target.z);
         DrawText(cameraPosition.c_str(), 10, 50, 20, BLACK);
+        DrawText(cameraTarget.c_str(), 10, 70, 20, BLACK);
         DrawFPS(10, 10);
     }
     EndDrawing();
