@@ -58,12 +58,21 @@ void World::update(rl::Vector3 playerPosition, int renderDistance)
         for (int z = -renderDistance; z <= renderDistance; ++z)
         {
             rl::Vector2 chunkPosition = {scaledPlayerPosition.x + x, scaledPlayerPosition.y + z};
-            auto chunk = std::find_if(chunkCache.begin(), chunkCache.end(), [chunkPosition](Chunk &chunk) {
-                return chunk.coordinates == chunkPosition;
-            });
+            auto chunk = std::find_if(chunkCache.begin(), chunkCache.end(),
+                                      [chunkPosition](Chunk &chunk) { return chunk.coordinates == chunkPosition; });
             if (chunk == chunkCache.end())
                 chunkCache.emplace_back(generator->generateChunk(chunkPosition));
         }
+
+    for (auto chunk = chunkCache.begin(); chunk != chunkCache.end();)
+    {
+        rl::Vector2 chunkPosition = chunk->coordinates;
+        if (std::abs(chunkPosition.x - scaledPlayerPosition.x) > renderDistance ||
+            std::abs(chunkPosition.y - scaledPlayerPosition.y) > renderDistance)
+            chunk = chunkCache.erase(chunk);
+        else
+            ++chunk;
+    }
 }
 
 void World::draw(rl::Vector3 playerDirection, int renderDistance)
