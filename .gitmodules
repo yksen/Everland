@@ -4,3 +4,6 @@
 [submodule "lib/raylib-cpp"]
 	path = lib/raylib-cpp
 	url = https://github.com/robloach/raylib-cpp
+[submodule "lib/fmt"]
+	path = lib/fmt
+	url = https://github.com/fmtlib/fmt

@@ -1,7 +1,7 @@
 #include "Game.hpp"
 #include "raylib-cpp.hpp"
 
-#include <format>
+#include <fmt/core.h>
 
 Game::Game(std::unique_ptr<World> &&world) : world{std::move(world)}
 {
@@ -54,8 +54,8 @@ void Game::drawDebugInfo()
     const auto &camera = player.camera;
 
     std::string cameraPosition =
-        std::format("{:.3f}\t{:.3f}\t{:.3f}", camera.position.x, camera.position.y, camera.position.z);
-    std::string cameraTarget = std::format("{:.3f}\t{:.3f}\t{:.3f}", camera.target.x, camera.target.y, camera.target.z);
+        fmt::format("{:.3f}\t{:.3f}\t{:.3f}", camera.position.x, camera.position.y, camera.position.z);
+    std::string cameraTarget = fmt::format("{:.3f}\t{:.3f}\t{:.3f}", camera.target.x, camera.target.y, camera.target.z);
 
     DrawFPS(leftMargin, rowSpacing * ++rowNumber);
     DrawText(world->name.c_str(), leftMargin, rowSpacing * ++rowNumber, fontSize, fontColor);
