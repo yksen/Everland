@@ -75,10 +75,12 @@ void World::update(rl::Vector3 playerPosition, int renderDistance)
     }
 }
 
-void World::draw(rl::Vector3 playerDirection, int renderDistance)
+void World::draw(rl::Vector3 playerDirection)
 {
     for (auto chunk : chunkCache)
+    {
         chunk.draw(playerDirection);
+    }
 }
 
 void World::saveInfo()

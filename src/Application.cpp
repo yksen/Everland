@@ -4,7 +4,7 @@
 Application::Application(const ApplicationOptions &options) : options{options}
 {
     window.Init(GetScreenWidth(), GetScreenHeight(), "Everland");
-    window.SetTargetFPS(0);
+    window.SetTargetFPS(144);
 
     worlds = World::discoverLocalWorlds();
     appLoop();

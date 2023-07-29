@@ -10,6 +10,7 @@ struct Chunk
 {
     static constexpr int size{16};
     static constexpr int height{128};
+    static constexpr Vector3 blockSize{1.0f, 1.0f, 1.0f};
 
     Chunk(const rl::Vector2 &coordinates);
 

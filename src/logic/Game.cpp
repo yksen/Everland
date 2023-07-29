@@ -1,6 +1,8 @@
 #include "Game.hpp"
 #include "raylib-cpp.hpp"
 
+#include <format>
+
 Game::Game(std::unique_ptr<World> &&world) : world{std::move(world)}
 {
     SetExitKey(KEY_NULL);
@@ -10,6 +12,9 @@ Game::Game(std::unique_ptr<World> &&world) : world{std::move(world)}
 
 void Game::processInput()
 {
+    if (IsKeyPressed(KEY_F3))
+        options.debugModeEnabled = !options.debugModeEnabled;
+
     player.processInput();
 }
 
@@ -24,24 +29,38 @@ void Game::draw()
     BeginDrawing();
     {
         ClearBackground(BLUE);
+
         BeginMode3D(player.camera);
         {
-            world->draw(player.camera.target, options.renderDistance);
+            world->draw(player.camera.target);
             player.draw();
         }
         EndMode3D();
-        DrawText(world->name.c_str(), 10, 30, 20, BLACK);
-        std::string cameraPosition = std::to_string(player.camera.position.x) + "\t" +
-                                     std::to_string(player.camera.position.y) + "\t" +
-                                     std::to_string(player.camera.position.z);
-        std::string cameraTarget = std::to_string(player.camera.target.x) + "\t" +
-                                   std::to_string(player.camera.target.y) + "\t" +
-                                   std::to_string(player.camera.target.z);
-        DrawText(cameraPosition.c_str(), 10, 50, 20, BLACK);
-        DrawText(cameraTarget.c_str(), 10, 70, 20, BLACK);
-        DrawFPS(10, 10);
+
+        if (options.debugModeEnabled)
+            drawDebugInfo();
     }
     EndDrawing();
+}
+
+void Game::drawDebugInfo()
+{
+    static constexpr Color fontColor = BLACK;
+    static constexpr int fontSize = 20;
+    static constexpr int leftMargin = 20;
+    static constexpr int rowSpacing = 20;
+    int rowNumber = 0;
+
+    const auto &camera = player.camera;
+
+    std::string cameraPosition =
+        std::format("{:.3f}\t{:.3f}\t{:.3f}", camera.position.x, camera.position.y, camera.position.z);
+    std::string cameraTarget = std::format("{:.3f}\t{:.3f}\t{:.3f}", camera.target.x, camera.target.y, camera.target.z);
+
+    DrawFPS(leftMargin, rowSpacing * ++rowNumber);
+    DrawText(world->name.c_str(), leftMargin, rowSpacing * ++rowNumber, fontSize, fontColor);
+    DrawText(cameraPosition.c_str(), leftMargin, rowSpacing * ++rowNumber, fontSize, fontColor);
+    DrawText(cameraTarget.c_str(), leftMargin, rowSpacing * ++rowNumber, fontSize, fontColor);
 }
 
 void Game::gameLoop()

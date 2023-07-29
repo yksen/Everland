@@ -11,7 +11,8 @@ namespace rl = raylib;
 
 struct GameOptions
 {
-    int renderDistance{4};
+    int renderDistance{1};
+    bool debugModeEnabled{false};
 };
 
 class Game
@@ -28,6 +29,7 @@ private:
     void processInput();
     void update();
     void draw();
+    void drawDebugInfo();
     void gameLoop();
 
     std::unique_ptr<World> world;
