@@ -32,7 +32,7 @@ void Game::draw()
 
         BeginMode3D(player.camera);
         {
-            world->draw(player.camera.target);
+            world->draw(player.camera.target, options.debugModeEnabled);
             player.draw();
         }
         EndMode3D();

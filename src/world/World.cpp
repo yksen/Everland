@@ -75,11 +75,14 @@ void World::update(rl::Vector3 playerPosition, int renderDistance)
     }
 }
 
-void World::draw(rl::Vector3 playerDirection)
+void World::draw(rl::Vector3 playerDirection, bool debugModeEnabled)
 {
     for (auto chunk : chunkCache)
     {
-        chunk.draw(playerDirection);
+        chunk.draw();
+
+        if (debugModeEnabled)
+            chunk.drawChunkBorders();
     }
 }
 

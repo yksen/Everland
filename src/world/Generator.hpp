@@ -14,7 +14,8 @@ struct Chunk
 
     Chunk(const rl::Vector2 &coordinates);
 
-    void draw(rl::Vector3 playerDirection);
+    void draw();
+    void drawChunkBorders();
 
     rl::Vector2 coordinates;
     std::vector<std::vector<std::vector<bool>>> blocks;

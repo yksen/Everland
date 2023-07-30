@@ -24,7 +24,7 @@ public:
     ~World();
 
     void update(rl::Vector3 playerPosition, int renderDistance);
-    void draw(rl::Vector3 playerDirection);
+    void draw(rl::Vector3 playerDirection, bool debugModeEnabled);
 
     std::string name;
     std::chrono::time_point<std::chrono::steady_clock> creationTime;
