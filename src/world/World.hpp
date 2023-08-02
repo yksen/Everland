@@ -23,8 +23,8 @@ public:
     World(const fs::directory_entry &worldDirectory);
     ~World();
 
-    void update(rl::Vector3 playerPosition, int renderDistance);
-    void draw(rl::Vector3 playerDirection, bool debugModeEnabled);
+    void update(const rl::Vector2 &playerChunk, int renderDistance);
+    void draw(const rl::Camera &playerCamera, bool debugModeEnabled);
 
     std::string name;
     std::chrono::time_point<std::chrono::steady_clock> creationTime;

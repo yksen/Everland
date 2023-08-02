@@ -20,7 +20,10 @@ void Game::processInput()
 
 void Game::update()
 {
-    world->update(player.camera.position, options.renderDistance);
+    const rl::Vector2 playerChunk = {std::floor(player.camera.position.x / Chunk::size),
+                                     std::floor(player.camera.position.z / Chunk::size)};
+
+    world->update(playerChunk, options.renderDistance);
     player.update();
 }
 
@@ -32,7 +35,7 @@ void Game::draw()
 
         BeginMode3D(player.camera);
         {
-            world->draw(player.camera.target, options.debugModeEnabled);
+            world->draw(player.camera, options.debugModeEnabled);
             player.draw();
         }
         EndMode3D();

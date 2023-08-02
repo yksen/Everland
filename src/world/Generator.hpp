@@ -1,6 +1,7 @@
 #pragma once
 
 #include "raylib-cpp.hpp"
+#include <PerlinNoise.hpp>
 
 #include <vector>
 
@@ -39,10 +40,20 @@ public:
 
 private:
     static constexpr int seaLevel{1};
-    static constexpr float scale{3.7f};
+};
+
+class DefaultGenerator : public Generator
+{
+public:
+    void generateTerrain(Chunk &chunk) override;
+    void generateBiomes(Chunk &chunk) override;
+    void generateFeatures(Chunk &chunk) override;
+
+private:
+    static constexpr int seaLevel{64};
     static constexpr int octaves{4};
+    static constexpr float scale{0.005f};
     static constexpr float persistance{1.3f};
-    static constexpr float lacunarity{1.0f};
-    static constexpr float amplitude{5.0f};
-    static constexpr float frequency{0.1f};
+
+    siv::PerlinNoise perlinNoise{std::random_device{}()};
 };

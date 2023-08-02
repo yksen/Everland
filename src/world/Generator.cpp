@@ -13,8 +13,7 @@ void Chunk::draw()
         for (int z = 0; z < size; ++z)
             for (float y = 0.0f; y < height; ++y)
                 if (blocks[x][z][y])
-                    DrawCubeWiresV({coordinates.x * Chunk::size + x, y, coordinates.y * Chunk::size + z}, blockSize,
-                                   color);
+                    DrawCubeV({coordinates.x * Chunk::size + x, y, coordinates.y * Chunk::size + z}, blockSize, color);
 }
 
 void Chunk::drawChunkBorders()
@@ -50,5 +49,26 @@ void FlatGenerator::generateBiomes(Chunk &chunk)
 }
 
 void FlatGenerator::generateFeatures(Chunk &chunk)
+{
+}
+
+void DefaultGenerator::generateTerrain(Chunk &chunk)
+{
+    for (int x = 0; x < Chunk::size; ++x)
+        for (int z = 0; z < Chunk::size; ++z)
+        {
+            float height = perlinNoise.normalizedOctave2D_01((x + chunk.coordinates.x * Chunk::size) * scale,
+                                                             (z + chunk.coordinates.y * Chunk::size) * scale, octaves,
+                                                             persistance);
+            height *= Chunk::height;
+            chunk.blocks[x][z][height] = true;
+        }
+}
+
+void DefaultGenerator::generateBiomes(Chunk &chunk)
+{
+}
+
+void DefaultGenerator::generateFeatures(Chunk &chunk)
 {
 }

@@ -7,6 +7,14 @@
 
 const fs::path World::worldsDirectoryPath = std::string(getenv("APPDATA")) + "\\Everland\\worlds";
 
+namespace
+{
+bool isChunkInRenderDistance(const rl::Vector2 &chunk, const rl::Vector2 &playerChunk, int renderDistance)
+{
+    return std::abs(chunk.x - playerChunk.x) <= renderDistance && std::abs(chunk.y - playerChunk.y) <= renderDistance;
+}
+} // namespace
+
 std::vector<std::unique_ptr<World>> World::discoverLocalWorlds()
 {
     std::vector<std::unique_ptr<World>> worlds;
@@ -49,15 +57,12 @@ World::~World()
     saveInfo();
 }
 
-void World::update(rl::Vector3 playerPosition, int renderDistance)
+void World::update(const rl::Vector2 &playerChunk, int renderDistance)
 {
-    rl::Vector2 scaledPlayerPosition = {std::floor(playerPosition.x / Chunk::size),
-                                        std::floor(playerPosition.z / Chunk::size)};
-
     for (int x = -renderDistance; x <= renderDistance; ++x)
         for (int z = -renderDistance; z <= renderDistance; ++z)
         {
-            rl::Vector2 chunkPosition = {scaledPlayerPosition.x + x, scaledPlayerPosition.y + z};
+            rl::Vector2 chunkPosition = {playerChunk.x + x, playerChunk.y + z};
             auto chunk = std::find_if(chunkCache.begin(), chunkCache.end(),
                                       [chunkPosition](Chunk &chunk) { return chunk.coordinates == chunkPosition; });
             if (chunk == chunkCache.end())
@@ -66,21 +71,18 @@ void World::update(rl::Vector3 playerPosition, int renderDistance)
 
     for (auto chunk = chunkCache.begin(); chunk != chunkCache.end();)
     {
-        rl::Vector2 chunkPosition = chunk->coordinates;
-        if (std::abs(chunkPosition.x - scaledPlayerPosition.x) > renderDistance ||
-            std::abs(chunkPosition.y - scaledPlayerPosition.y) > renderDistance)
+        if (!isChunkInRenderDistance(chunk->coordinates, playerChunk, renderDistance))
             chunk = chunkCache.erase(chunk);
         else
             ++chunk;
     }
 }
 
-void World::draw(rl::Vector3 playerDirection, bool debugModeEnabled)
+void World::draw(const rl::Camera &playerCamera, bool debugModeEnabled)
 {
     for (auto chunk : chunkCache)
     {
         chunk.draw();
-
         if (debugModeEnabled)
             chunk.drawChunkBorders();
     }

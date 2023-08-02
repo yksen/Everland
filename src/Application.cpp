@@ -13,7 +13,7 @@ Application::Application(const ApplicationOptions &options) : options{options}
 void Application::processInput()
 {
     if (IsKeyPressed(KEY_N))
-        game = std::make_unique<Game>(std::make_unique<World>("New World", std::make_unique<FlatGenerator>()));
+        game = std::make_unique<Game>(std::make_unique<World>("New World", std::make_unique<DefaultGenerator>()));
 }
 
 void Application::update()
