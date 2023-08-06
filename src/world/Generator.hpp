@@ -52,7 +52,7 @@ public:
 private:
     static constexpr int seaLevel{64};
     static constexpr int octaves{4};
-    static constexpr float scale{0.005f};
+    static constexpr float scale{1 / 200.f};
     static constexpr float persistance{1.3f};
 
     siv::PerlinNoise perlinNoise{std::random_device{}()};

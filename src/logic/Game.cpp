@@ -7,6 +7,7 @@ Game::Game(std::unique_ptr<World> &&world) : world{std::move(world)}
 {
     SetExitKey(KEY_NULL);
     DisableCursor();
+    
     gameLoop();
 }
 

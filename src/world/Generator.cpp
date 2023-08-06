@@ -9,11 +9,13 @@ Chunk::Chunk(const rl::Vector2 &coordinates) : coordinates{coordinates}
 void Chunk::draw()
 {
     Color color = (static_cast<int>(coordinates.x) + static_cast<int>(coordinates.y)) % 2 == 0 ? WHITE : GREEN;
+    static rl::Model cube{rl::Mesh::Cube(blockSize.x, blockSize.y, blockSize.z)};
+
     for (int x = 0; x < size; ++x)
         for (int z = 0; z < size; ++z)
             for (float y = 0.0f; y < height; ++y)
                 if (blocks[x][z][y])
-                    DrawCubeV({coordinates.x * Chunk::size + x, y, coordinates.y * Chunk::size + z}, blockSize, color);
+                    cube.Draw({coordinates.x * Chunk::size + x, y, coordinates.y * Chunk::size + z}, 1.0f, color);
 }
 
 void Chunk::drawChunkBorders()
