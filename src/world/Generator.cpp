@@ -8,8 +8,15 @@ Chunk::Chunk(const rl::Vector2 &coordinates) : coordinates{coordinates}
 
 void Chunk::draw()
 {
+    static const rl::Shader shader =
+        rl::Shader::Load("resources/shaders/vertex.glsl", "resources/shaders/fragment.glsl");
+    static const rl::Model cube = [] {
+        rl::Model cube{rl::Mesh::Cube(blockSize.x, blockSize.y, blockSize.z)};
+        cube.materials[0].shader = shader;
+        return cube;
+    }();
+
     Color color = (static_cast<int>(coordinates.x) + static_cast<int>(coordinates.y)) % 2 == 0 ? WHITE : GREEN;
-    static rl::Model cube{rl::Mesh::Cube(blockSize.x, blockSize.y, blockSize.z)};
 
     for (int x = 0; x < size; ++x)
         for (int z = 0; z < size; ++z)

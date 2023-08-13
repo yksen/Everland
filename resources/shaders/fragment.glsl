@@ -1,12 +1,17 @@
-#version 450 core
-out vec4 FragColor;
+#version 330
 
-in vec3 Normal;  
-in vec3 FragPos;  
-  
-uniform vec3 lightPos; 
+in vec3 fragPosition;
+in vec2 fragTextureCoordinates;
+in vec3 fragNormal;
+in vec4 fragColor;
+
+uniform sampler2D texture;
+uniform vec4 colorDiffuse;
+
 uniform vec3 lightColor;
 uniform vec3 objectColor;
+
+out vec4 finalColor;
 
 void main()
 {
