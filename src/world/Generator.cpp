@@ -8,8 +8,14 @@ Chunk::Chunk(const rl::Vector2 &coordinates) : coordinates{coordinates}
 
 void Chunk::draw()
 {
-    static const rl::Shader shader =
-        rl::Shader::Load("resources/shaders/vertex.glsl", "resources/shaders/fragment.glsl");
+    static const rl::Shader shader = [] {
+        rl::Shader shader = rl::Shader::Load("resources/shaders/vertex.glsl", "resources/shaders/fragment.glsl");
+        static constexpr float lightColor[3] = {1.0f, 1.0f, 1.0f};
+        static constexpr float objectColor[3] = {0.0f, 1.0f, 0.0f};
+        shader.SetValue(shader.GetLocation("lightColor"), &lightColor, SHADER_UNIFORM_VEC3);
+        shader.SetValue(shader.GetLocation("objectColor"), &objectColor, SHADER_UNIFORM_VEC3);
+        return shader;
+    }();
     static const rl::Model cube = [] {
         rl::Model cube{rl::Mesh::Cube(blockSize.x, blockSize.y, blockSize.z)};
         cube.materials[0].shader = shader;
