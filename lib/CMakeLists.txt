@@ -1,3 +1,3 @@
-add_subdirectory(glad)
-add_subdirectory(glfw)
-add_subdirectory(glm)
+add_subdirectory(fmt)
+add_subdirectory(raylib)
+add_subdirectory(raylib-cpp)

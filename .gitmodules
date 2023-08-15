@@ -1,6 +1,12 @@
-[submodule "lib/glm"]
-	path = lib/glm
-	url = https://github.com/g-truc/glm/
-[submodule "lib/glfw"]
-	path = lib/glfw
-	url = https://github.com/glfw/glfw
+[submodule "lib/raylib"]
+	path = lib/raylib
+	url = https://github.com/raysan5/raylib
+[submodule "lib/raylib-cpp"]
+	path = lib/raylib-cpp
+	url = https://github.com/robloach/raylib-cpp
+[submodule "lib/fmt"]
+	path = lib/fmt
+	url = https://github.com/fmtlib/fmt
+[submodule "lib/PerlinNoise"]
+	path = lib/PerlinNoise
+	url = https://github.com/Reputeless/PerlinNoise

@@ -1,13 +1,15 @@
-cmake_minimum_required(VERSION 3.15...3.23)
+cmake_minimum_required(VERSION 3.15...3.27)
 project(Everland LANGUAGES CXX)
 
-file(COPY ${CMAKE_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})
-
-set(GLFW_BUILD_X11 OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(lib)
 add_subdirectory(src)
+add_subdirectory(test)
+
+add_custom_target(run
+    COMMAND ${CMAKE_BINARY_DIR}/src/Everland.exe
+    DEPENDS Everland
+    WORKING_DIRECTORY ${CMAKE_PROJECT_DIR}
+)

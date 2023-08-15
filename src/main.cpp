@@ -1,8 +1,10 @@
 #include "Application.hpp"
+#include "Parser.hpp"
 
-int main()
+int main(int argc, char **argv)
 {
-    Everland::Application::init();
+    auto options = parseCommandLineInput(argc, argv);
+    std::make_unique<Application>(std::move(options));
 
     return 0;
 }
