@@ -6,7 +6,7 @@ Chunk::Chunk(const rl::Vector2 &coordinates) : coordinates{coordinates}
         size, std::vector<std::vector<bool>>(size, std::vector<bool>(height, false)));
 }
 
-void Chunk::draw()
+void Chunk::generateMesh()
 {
     static const rl::Shader shader = [] {
         rl::Shader shader = rl::Shader::Load("resources/shaders/vertex.glsl", "resources/shaders/fragment.glsl");
@@ -16,22 +16,19 @@ void Chunk::draw()
         shader.SetValue(shader.GetLocation("objectColor"), &objectColor, SHADER_UNIFORM_VEC3);
         return shader;
     }();
-    static const rl::Model cube = [] {
-        rl::Model cube{rl::Mesh::Cube(blockSize.x, blockSize.y, blockSize.z)};
-        cube.materials[0].shader = shader;
-        return cube;
-    }();
 
-    Color color = (static_cast<int>(coordinates.x) + static_cast<int>(coordinates.y)) % 2 == 0 ? WHITE : GREEN;
-
-    for (int x = 0; x < size; ++x)
-        for (int z = 0; z < size; ++z)
-            for (float y = 0.0f; y < height; ++y)
-                if (blocks[x][z][y])
-                    cube.Draw({coordinates.x * Chunk::size + x, y, coordinates.y * Chunk::size + z}, 1.0f, color);
+    // model = std::make_unique<rl::Model>(rl::Mesh::Cube(Chunk::blockSize.x, Chunk::blockSize.y, Chunk::blockSize.z));
+    // model->materials[0].shader = shader;
 }
 
-void Chunk::drawChunkBorders()
+void Chunk::draw() const
+{
+    rl::Color color{rl::Color::Green()};
+
+    // model->DrawWires({coordinates.x * Chunk::size, 0.0f, coordinates.y * Chunk::size}, 1.0f, color);
+}
+
+void Chunk::drawChunkBorders() const
 {
     DrawCubeWiresV({coordinates.x * Chunk::size + Chunk::size / 2 - Chunk::blockSize.x / 2,
                     Chunk::height / 2 - Chunk::blockSize.y / 2,
@@ -76,7 +73,10 @@ void DefaultGenerator::generateTerrain(Chunk &chunk)
                                                              (z + chunk.coordinates.y * Chunk::size) * scale, octaves,
                                                              persistance);
             height *= Chunk::height;
-            chunk.blocks[x][z][height] = true;
+
+            for (int y = 0; y < Chunk::height; ++y)
+                if (y < height)
+                    chunk.blocks[x][z][y] = true;
         }
 }
 

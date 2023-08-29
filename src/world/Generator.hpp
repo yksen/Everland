@@ -1,8 +1,11 @@
 #pragma once
 
-#include "raylib-cpp.hpp"
-#include <PerlinNoise.hpp>
+#include "MeshBuilder.hpp"
 
+#include <PerlinNoise.hpp>
+#include <raylib-cpp.hpp>
+
+#include <memory>
 #include <vector>
 
 namespace rl = raylib;
@@ -15,8 +18,9 @@ struct Chunk
 
     Chunk(const rl::Vector2 &coordinates);
 
-    void draw();
-    void drawChunkBorders();
+    void generateMesh();
+    void draw() const;
+    void drawChunkBorders() const;
 
     rl::Vector2 coordinates;
     std::vector<std::vector<std::vector<bool>>> blocks;

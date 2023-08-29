@@ -1,5 +1,5 @@
 #include "Game.hpp"
-#include "raylib-cpp.hpp"
+#include <raylib-cpp.hpp>
 
 #include <fmt/core.h>
 
@@ -7,7 +7,7 @@ Game::Game(std::unique_ptr<World> &&world) : world{std::move(world)}
 {
     SetExitKey(KEY_NULL);
     DisableCursor();
-    
+
     gameLoop();
 }
 

@@ -1,5 +1,5 @@
 #include "World.hpp"
-#include "raylib-cpp.hpp"
+#include <raylib-cpp.hpp>
 
 #include <algorithm>
 #include <fstream>
@@ -80,7 +80,7 @@ void World::update(const rl::Vector2 &playerChunk, int renderDistance)
 
 void World::draw(const rl::Camera &playerCamera, bool debugModeEnabled)
 {
-    for (auto chunk : chunkCache)
+    for (const auto &chunk : chunkCache)
     {
         chunk.draw();
         if (debugModeEnabled)
