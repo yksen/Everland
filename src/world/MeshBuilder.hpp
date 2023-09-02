@@ -44,14 +44,14 @@ constexpr me::array<Direction, std::array<Vector3, 6>> cubeFaces{
     0.f, 1.f, 0.f, 0.f, 1.f, 1.f, 1.f, 1.f, 1.f, //
     0.f, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f, 0.f, 1.f, // Bottom
     0.f, 0.f, 0.f, 1.f, 0.f, 1.f, 0.f, 0.f, 1.f, //
-    0.f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f, 1.f, 1.f, // North
-    0.f, 0.f, 0.f, 0.f, 1.f, 1.f, 0.f, 1.f, 0.f, //
-    1.f, 0.f, 0.f, 1.f, 1.f, 1.f, 1.f, 0.f, 1.f, // South
-    1.f, 0.f, 0.f, 1.f, 1.f, 0.f, 1.f, 1.f, 1.f, //
-    0.f, 0.f, 0.f, 1.f, 1.f, 0.f, 1.f, 0.f, 0.f, // East
-    0.f, 0.f, 0.f, 0.f, 1.f, 0.f, 1.f, 1.f, 0.f, //
-    0.f, 0.f, 1.f, 1.f, 0.f, 1.f, 1.f, 1.f, 1.f, // West
+    0.f, 0.f, 1.f, 1.f, 0.f, 1.f, 1.f, 1.f, 1.f, // North
     0.f, 0.f, 1.f, 1.f, 1.f, 1.f, 0.f, 1.f, 1.f, //
+    0.f, 0.f, 0.f, 1.f, 1.f, 0.f, 1.f, 0.f, 0.f, // South
+    0.f, 0.f, 0.f, 0.f, 1.f, 0.f, 1.f, 1.f, 0.f, //
+    0.f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f, 1.f, 1.f, // East
+    0.f, 0.f, 0.f, 0.f, 1.f, 1.f, 0.f, 1.f, 0.f, //
+    1.f, 0.f, 0.f, 1.f, 1.f, 1.f, 1.f, 0.f, 1.f, // West
+    1.f, 0.f, 0.f, 1.f, 1.f, 0.f, 1.f, 1.f, 1.f, //
 };
 
 class MeshBuilder
