@@ -1,6 +1,6 @@
 #pragma once
 
-#include "raylib-cpp.hpp"
+#include <raylib-cpp.hpp>
 
 #include <logic/Game.hpp>
 #include <world/World.hpp>

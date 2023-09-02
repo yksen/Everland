@@ -80,7 +80,7 @@ void World::update(const rl::Vector2 &playerChunk, int renderDistance)
 
 void World::draw(const rl::Camera &playerCamera, bool debugModeEnabled)
 {
-    for (const auto &chunk : chunkCache)
+    for (auto &chunk : chunkCache)
     {
         chunk.draw();
         if (debugModeEnabled)

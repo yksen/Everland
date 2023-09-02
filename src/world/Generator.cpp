@@ -1,13 +1,22 @@
 #include "Generator.hpp"
 
+MeshBuilder Chunk::meshBuilder{};
+
 Chunk::Chunk(const rl::Vector2 &coordinates) : coordinates{coordinates}
 {
     blocks = std::vector<std::vector<std::vector<bool>>>(
         size, std::vector<std::vector<bool>>(size, std::vector<bool>(height, false)));
 }
 
-void Chunk::generateMesh()
+void Chunk::draw()
 {
+    rl::Color color{rl::Color::Green()};
+    if (model)
+    {
+        model->Draw({coordinates.x * Chunk::size, 0.0f, coordinates.y * Chunk::size}, 1.0f, color);
+        return;
+    }
+
     static const rl::Shader shader = [] {
         rl::Shader shader = rl::Shader::Load("resources/shaders/vertex.glsl", "resources/shaders/fragment.glsl");
         static constexpr float lightColor[3] = {1.0f, 1.0f, 1.0f};
@@ -17,22 +26,15 @@ void Chunk::generateMesh()
         return shader;
     }();
 
-    // model = std::make_unique<rl::Model>(rl::Mesh::Cube(Chunk::blockSize.x, Chunk::blockSize.y, Chunk::blockSize.z));
-    // model->materials[0].shader = shader;
-}
-
-void Chunk::draw() const
-{
-    rl::Color color{rl::Color::Green()};
-
-    // model->DrawWires({coordinates.x * Chunk::size, 0.0f, coordinates.y * Chunk::size}, 1.0f, color);
+    auto mesh = meshBuilder.buildMesh(*this);
+    model = std::make_unique<rl::Model>(mesh);
+    model->materials[0].shader = shader;
 }
 
 void Chunk::drawChunkBorders() const
 {
-    DrawCubeWiresV({coordinates.x * Chunk::size + Chunk::size / 2 - Chunk::blockSize.x / 2,
-                    Chunk::height / 2 - Chunk::blockSize.y / 2,
-                    coordinates.y * Chunk::size + Chunk::size / 2 - Chunk::blockSize.z / 2},
+    DrawCubeWiresV({coordinates.x * Chunk::size + Chunk::size / 2, Chunk::height / 2,
+                    coordinates.y * Chunk::size + Chunk::size / 2},
                    {Chunk::size, Chunk::height, Chunk::size}, RED);
 }
 

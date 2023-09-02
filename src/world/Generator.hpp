@@ -10,20 +10,24 @@
 
 namespace rl = raylib;
 
+class MeshBuilder;
+
 struct Chunk
 {
     static constexpr int size{16};
     static constexpr int height{128};
-    static constexpr Vector3 blockSize{1.0f, 1.0f, 1.0f};
+    static constexpr Vector3 blockSize{1.f, 1.f, 1.f};
+
+    static MeshBuilder meshBuilder;
 
     Chunk(const rl::Vector2 &coordinates);
 
-    void generateMesh();
-    void draw() const;
+    void draw();
     void drawChunkBorders() const;
 
     rl::Vector2 coordinates;
     std::vector<std::vector<std::vector<bool>>> blocks;
+    std::unique_ptr<rl::Model> model;
 };
 
 class Generator
