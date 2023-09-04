@@ -24,6 +24,7 @@ struct Chunk
 
     void draw();
     void drawChunkBorders() const;
+    void buildMesh();
 
     rl::Vector2 coordinates;
     std::vector<std::vector<std::vector<bool>>> blocks;
