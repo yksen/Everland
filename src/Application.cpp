@@ -1,4 +1,5 @@
-#include "Application.hpp"
+#include <Application.hpp>
+
 #include <raylib-cpp.hpp>
 
 Application::Application(const ApplicationOptions &options) : options{options}

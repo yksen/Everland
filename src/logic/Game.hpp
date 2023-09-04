@@ -1,9 +1,9 @@
 #pragma once
 
-#include <raylib-cpp.hpp>
-
-#include "Player.hpp"
+#include <logic/Player.hpp>
 #include <world/World.hpp>
+
+#include <raylib-cpp.hpp>
 
 #include <memory>
 
@@ -11,7 +11,7 @@ namespace rl = raylib;
 
 struct GameOptions
 {
-    int renderDistance{2};
+    int renderDistance{20};
     bool debugModeEnabled{false};
 };
 

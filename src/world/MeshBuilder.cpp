@@ -1,10 +1,11 @@
 #include "MeshBuilder.hpp"
 
 #include <algorithm>
+#include <deque>
 
 namespace
 {
-void addFace(std::vector<float> &vertices, std::vector<float> &normals, Direction dir, int x, int y, int z)
+void addFace(std::deque<float> &vertices, std::deque<float> &normals, Direction dir, int x, int y, int z)
 {
     for (auto vertex : cubeFaces[dir])
         vertices.insert(vertices.end(), {vertex.x + x, vertex.y + y, vertex.z + z});
@@ -22,7 +23,7 @@ MeshBuilder::MeshBuilder()
 
 Mesh MeshBuilder::buildMesh(const Chunk &chunk)
 {
-    std::vector<float> vertices, normals;
+    std::deque<float> vertices, normals;
 
     for (int x = 0; x < Chunk::size; ++x)
         for (int z = 0; z < Chunk::size; ++z)

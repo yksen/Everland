@@ -1,8 +1,8 @@
 #pragma once
 
-#include <raylib-cpp.hpp>
+#include <world/Generator.hpp>
 
-#include "Generator.hpp"
+#include <raylib-cpp.hpp>
 
 #include <chrono>
 #include <filesystem>

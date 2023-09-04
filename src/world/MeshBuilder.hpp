@@ -5,12 +5,6 @@
 #include <magic_enum_all.hpp>
 #include <raylib-cpp.hpp>
 
-#include <condition_variable>
-#include <functional>
-#include <mutex>
-#include <queue>
-#include <thread>
-
 namespace me
 {
 using namespace magic_enum;

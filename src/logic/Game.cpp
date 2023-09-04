@@ -1,7 +1,7 @@
 #include "Game.hpp"
-#include <raylib-cpp.hpp>
 
 #include <fmt/core.h>
+#include <raylib-cpp.hpp>
 
 Game::Game(std::unique_ptr<World> &&world) : world{std::move(world)}
 {
