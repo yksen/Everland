@@ -10,9 +10,8 @@ Chunk::Chunk(const rl::Vector2 &coordinates) : coordinates{coordinates}
 
 void Chunk::draw()
 {
-    rl::Color color{rl::Color::Green()};
     if (model)
-        model->Draw({coordinates.x * Chunk::size, 0.0f, coordinates.y * Chunk::size}, 1.0f, color);
+        model->Draw({coordinates.x * Chunk::size, 0.0f, coordinates.y * Chunk::size}, 1.0f, rl::Color::White());
 }
 
 void Chunk::drawChunkBorders() const
@@ -27,9 +26,7 @@ void Chunk::buildMesh()
     static const rl::Shader shader = [] {
         rl::Shader shader = rl::Shader::Load("resources/shaders/vertex.glsl", "resources/shaders/fragment.glsl");
         static constexpr float lightColor[3] = {1.0f, 1.0f, 1.0f};
-        static constexpr float objectColor[3] = {0.0f, 1.0f, 0.0f};
         shader.SetValue(shader.GetLocation("lightColor"), &lightColor, SHADER_UNIFORM_VEC3);
-        shader.SetValue(shader.GetLocation("objectColor"), &objectColor, SHADER_UNIFORM_VEC3);
         return shader;
     }();
 

@@ -11,7 +11,7 @@ namespace rl = raylib;
 
 struct GameOptions
 {
-    int renderDistance{20};
+    int renderDistance{10};
     bool debugModeEnabled{false};
 };
 
