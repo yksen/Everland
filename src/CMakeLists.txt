@@ -1,13 +1,7 @@
-set(SOURCES
+add_executable(Everland
     main.cpp
-    Application.cpp
-    logic/Game.cpp
-    logic/Player.cpp
-    world/World.cpp
-    world/Generator.cpp
-    world/MeshBuilder.cpp
+    ${SOURCES}
 )
-add_executable(Everland ${SOURCES})
 
 target_include_directories(Everland PRIVATE ${CMAKE_SOURCE_DIR}/src)
 target_include_directories(Everland SYSTEM PRIVATE

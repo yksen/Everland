@@ -28,12 +28,12 @@ Mesh MeshBuilder::buildMesh(const Chunk &chunk)
     for (int x = 0; x < Chunk::size; ++x)
         for (int z = 0; z < Chunk::size; ++z)
             for (int y = 0; y < Chunk::height; ++y)
-                if (chunk.blocks[x][z][y])
+                if (chunk.getBlock(x, y, z))
                     me::enum_for_each<Direction>([&](Direction dir) {
-                        int nx = std::clamp(x + cubeNormals[dir].x, 0.f, Chunk::size - 1.f);
-                        int nz = std::clamp(z + cubeNormals[dir].z, 0.f, Chunk::size - 1.f);
-                        int ny = std::clamp(y + cubeNormals[dir].y, 0.f, Chunk::height - 1.f);
-                        if (!chunk.blocks[nx][nz][ny])
+                        int nx = x + cubeNormals[dir].x;
+                        int nz = z + cubeNormals[dir].z;
+                        int ny = y + cubeNormals[dir].y;
+                        if (!chunk.getBlock(nx, ny, nz))
                             addFace(vertices, normals, dir, x, y, z);
                     });
 

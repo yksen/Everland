@@ -24,10 +24,17 @@ struct Chunk
 
     void draw();
     void drawChunkBorders() const;
+
     void buildMesh();
+    bool getBlock(int x, int y, int z) const;
 
     rl::Vector2 coordinates;
     std::vector<std::vector<std::vector<bool>>> blocks;
+    std::array<std::array<Chunk *, 3>, 3> neighbors{
+        nullptr, nullptr, nullptr,
+        nullptr, nullptr, nullptr,
+        nullptr, nullptr, nullptr
+    };
     std::unique_ptr<rl::Model> model;
 };
 

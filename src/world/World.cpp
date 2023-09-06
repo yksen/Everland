@@ -67,16 +67,27 @@ void World::update(const rl::Vector2 &playerChunk, int renderDistance)
             auto chunk = std::find_if(chunkCache.begin(), chunkCache.end(),
                                       [chunkPosition](Chunk &chunk) { return chunk.coordinates == chunkPosition; });
             if (chunk == chunkCache.end())
+            {
                 chunkCache.emplace_back(generator->generateChunk(chunkPosition));
+                updateNeighbors(chunkCache.back());
+            }
         }
+
+    if (previousPlayerChunk.Equals(playerChunk))
+        return;
 
     for (auto chunk = chunkCache.begin(); chunk != chunkCache.end();)
     {
         if (!isChunkInRenderDistance(chunk->coordinates, playerChunk, renderDistance))
             chunk = chunkCache.erase(chunk);
         else
+        {
+            chunk->buildMesh();
             ++chunk;
+        }
     }
+
+    previousPlayerChunk = playerChunk;
 }
 
 void World::draw(const rl::Camera &playerCamera, bool debugModeEnabled)
@@ -87,6 +98,35 @@ void World::draw(const rl::Camera &playerCamera, bool debugModeEnabled)
         if (debugModeEnabled)
             chunk.drawChunkBorders();
     }
+}
+
+Chunk *World::getChunk(const rl::Vector2 &coordinates)
+{
+    auto chunk = std::find_if(chunkCache.begin(), chunkCache.end(),
+                              [coordinates](Chunk &chunk) { return chunk.coordinates == coordinates; });
+    if (chunk == chunkCache.end())
+        return nullptr;
+    return &*chunk;
+}
+
+void World::updateNeighbors(Chunk &chunk)
+{
+    for (int x = -1; x <= 1; ++x)
+        for (int z = -1; z <= 1; ++z)
+        {
+            if (x == 0 && z == 0)
+                continue;
+
+            rl::Vector2 neighborPosition = {chunk.coordinates.x + x, chunk.coordinates.y + z};
+            auto neighbor = std::find_if(chunkCache.begin(), chunkCache.end(), [neighborPosition](Chunk &chunk) {
+                return chunk.coordinates == neighborPosition;
+            });
+            if (neighbor != chunkCache.end())
+            {
+                chunk.neighbors[x + 1][z + 1] = &*neighbor;
+                neighbor->neighbors[-x + 1][-z + 1] = &chunk;
+            }
+        }
 }
 
 void World::saveInfo()

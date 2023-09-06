@@ -35,6 +35,25 @@ void Chunk::buildMesh()
     model->materials[0].shader = shader;
 }
 
+bool Chunk::getBlock(int x, int y, int z) const
+{
+    rl::Vector2 chunkPosition{std::floor(static_cast<float>(x) / Chunk::size),
+                              std::floor(static_cast<float>(z) / Chunk::size)};
+    bool inChunk = chunkPosition.Equals({0, 0});
+
+    if (inChunk)
+        return blocks[x][z][y];
+
+    int nx = (x + Chunk::size) % Chunk::size;
+    int nz = (z + Chunk::size) % Chunk::size;
+
+    auto neighbor = neighbors[chunkPosition.x + 1][chunkPosition.y + 1];
+    if (neighbor)
+        return neighbor->getBlock(nx, y, nz);
+
+    return true;
+}
+
 Chunk Generator::generateChunk(const rl::Vector2 &coordinates)
 {
     Chunk chunk{coordinates};
@@ -42,7 +61,6 @@ Chunk Generator::generateChunk(const rl::Vector2 &coordinates)
     generateTerrain(chunk);
     generateBiomes(chunk);
     generateFeatures(chunk);
-    chunk.buildMesh();
 
     return chunk;
 }
