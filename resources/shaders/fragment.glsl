@@ -14,6 +14,8 @@ out vec4 finalColor;
 
 void main()
 {
+    vec4 color = vec4(0, 1, 0, 1);
+
     float ambientStrength = 0.5;
     vec3 ambient = ambientStrength * lightColor;
 
@@ -21,6 +23,6 @@ void main()
     float diffuseStrength = max(dot(fragNormal, lightDirection), 0.0);
     vec3 diffuse = diffuseStrength * lightColor;
 
-    vec3 result = (ambient + diffuse) * fragColor.rgb;
-    finalColor = vec4(result, fragColor.a);
+    vec3 result = (ambient + diffuse) * color.rgb;
+    finalColor = vec4(result, color.a);
 }

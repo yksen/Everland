@@ -25,7 +25,7 @@ void Chunk::buildMesh()
 {
     static const rl::Shader shader = [] {
         rl::Shader shader = rl::Shader::Load("resources/shaders/vertex.glsl", "resources/shaders/fragment.glsl");
-        static constexpr float lightColor[3] = {1.0f, 1.0f, 1.0f};
+        static constexpr std::array<float, 3> lightColor{1.0F, 1.0F, 1.0F};
         shader.SetValue(shader.GetLocation("lightColor"), &lightColor, SHADER_UNIFORM_VEC3);
         return shader;
     }();
@@ -39,16 +39,16 @@ bool Chunk::getBlock(int x, int y, int z) const
 {
     rl::Vector2 chunkPosition{std::floor(static_cast<float>(x) / Chunk::size),
                               std::floor(static_cast<float>(z) / Chunk::size)};
-    bool inChunk = chunkPosition.Equals({0, 0});
+    const bool inChunk = static_cast<bool>(chunkPosition.Equals({0, 0}));
 
     if (inChunk)
         return blocks[x][z][y];
 
-    int nx = (x + Chunk::size) % Chunk::size;
-    int nz = (z + Chunk::size) % Chunk::size;
+    const int nx = (x + Chunk::size) % Chunk::size;
+    const int nz = (z + Chunk::size) % Chunk::size;
 
-    auto neighbor = neighbors[chunkPosition.x + 1][chunkPosition.y + 1];
-    if (neighbor)
+    auto *neighbor = neighbors[chunkPosition.x + 1][chunkPosition.y + 1];
+    if (neighbor != nullptr)
         return neighbor->getBlock(nx, y, nz);
 
     return true;
@@ -61,6 +61,7 @@ Chunk Generator::generateChunk(const rl::Vector2 &coordinates)
     generateTerrain(chunk);
     generateBiomes(chunk);
     generateFeatures(chunk);
+    chunk.buildMesh();
 
     return chunk;
 }

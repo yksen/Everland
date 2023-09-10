@@ -12,15 +12,15 @@ namespace rl = raylib;
 
 class MeshBuilder;
 
-struct Chunk
+class Chunk
 {
+public:
     static constexpr int size{16};
     static constexpr int height{128};
-    static constexpr Vector3 blockSize{1.f, 1.f, 1.f};
-
+    static constexpr Vector3 blockSize{1.F, 1.F, 1.F};
     static MeshBuilder meshBuilder;
 
-    Chunk(const rl::Vector2 &coordinates);
+    explicit Chunk(const rl::Vector2 &coordinates);
 
     void draw();
     void drawChunkBorders() const;
@@ -30,18 +30,18 @@ struct Chunk
 
     rl::Vector2 coordinates;
     std::vector<std::vector<std::vector<bool>>> blocks;
-    std::array<std::array<Chunk *, 3>, 3> neighbors{
-        nullptr, nullptr, nullptr,
-        nullptr, nullptr, nullptr,
-        nullptr, nullptr, nullptr
-    };
+    std::vector<std::vector<Chunk *>> neighbors{3, std::vector<Chunk *>{3, nullptr}};
+
+private:
     std::unique_ptr<rl::Model> model;
 };
 
 class Generator
 {
 public:
-    virtual Chunk generateChunk(const rl::Vector2 &coordinates);
+    virtual ~Generator() = default;
+
+    Chunk generateChunk(const rl::Vector2 &coordinates);
     virtual void generateTerrain(Chunk &chunk) = 0;
     virtual void generateBiomes(Chunk &chunk) = 0;
     virtual void generateFeatures(Chunk &chunk) = 0;
@@ -50,6 +50,8 @@ public:
 class FlatGenerator : public Generator
 {
 public:
+    ~FlatGenerator() override = default;
+
     void generateTerrain(Chunk &chunk) override;
     void generateBiomes(Chunk &chunk) override;
     void generateFeatures(Chunk &chunk) override;
@@ -61,6 +63,8 @@ private:
 class DefaultGenerator : public Generator
 {
 public:
+    ~DefaultGenerator() override = default;
+
     void generateTerrain(Chunk &chunk) override;
     void generateBiomes(Chunk &chunk) override;
     void generateFeatures(Chunk &chunk) override;
@@ -68,8 +72,8 @@ public:
 private:
     static constexpr int seaLevel{64};
     static constexpr int octaves{4};
-    static constexpr float scale{1 / 200.f};
-    static constexpr float persistance{1.3f};
+    static constexpr float scale{1 / 200.F};
+    static constexpr float persistance{1.3F};
 
     siv::PerlinNoise perlinNoise{std::random_device{}()};
 };

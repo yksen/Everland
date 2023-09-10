@@ -17,11 +17,7 @@ void addFace(std::deque<float> &vertices, std::deque<float> &normals, Direction 
 }
 } // namespace
 
-MeshBuilder::MeshBuilder()
-{
-}
-
-Mesh MeshBuilder::buildMesh(const Chunk &chunk)
+Mesh MeshBuilder::buildMesh(const Chunk &chunk) const
 {
     std::deque<float> vertices, normals;
 

@@ -21,11 +21,11 @@ public:
     static const fs::path worldsDirectoryPath;
 
     World(const std::string &name, std::unique_ptr<Generator> &&generator);
-    World(const fs::directory_entry &worldDirectory);
-    ~World();
+    explicit World(const fs::directory_entry &worldDirectory);
 
     void update(const rl::Vector2 &playerChunk, int renderDistance);
-    void draw(const rl::Camera &playerCamera, bool debugModeEnabled);
+    void draw(bool debugModeEnabled);
+    void saveInfo();
     Chunk *getChunk(const rl::Vector2 &coordinates);
 
     std::string name;
@@ -33,11 +33,13 @@ public:
     std::chrono::time_point<std::chrono::steady_clock> lastPlayedTime;
 
 private:
-    void updateNeighbors(Chunk &chunk);
-    void saveInfo();
+    void generateChunks(const rl::Vector2 &playerChunk, int renderDistance);
+    void addNeighbors(Chunk &chunk);
+    void unloadChunks(const rl::Vector2 &playerChunk, int renderDistance);
+    void removeNeighbors(Chunk &chunk);
 
     fs::directory_entry worldDirectory;
     std::unique_ptr<Generator> generator;
-    std::deque<Chunk> chunkCache;
-    rl::Vector2 previousPlayerChunk{0, 0};
+    std::deque<std::unique_ptr<Chunk>> chunkCache;
+    rl::Vector2 previousPlayerChunk{0.5F};
 };

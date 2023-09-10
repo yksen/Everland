@@ -12,7 +12,7 @@ using namespace magic_enum::containers;
 } // namespace me
 namespace rl = raylib;
 
-struct Chunk;
+class Chunk;
 
 enum class Direction
 {
@@ -25,33 +25,33 @@ enum class Direction
 };
 
 constexpr me::array<Direction, Vector3> cubeNormals{
-    0.f,  1.f,  0.f,  // Top
-    0.f,  -1.f, 0.f,  // Bottom
-    0.f,  0.f,  1.f,  // North
-    0.f,  0.f,  -1.f, // South
-    -1.f, 0.f,  0.f,  // East
-    1.f,  0.f,  0.f,  // West
+    0.F,  1.F,  0.F,  // Top
+    0.F,  -1.F, 0.F,  // Bottom
+    0.F,  0.F,  1.F,  // North
+    0.F,  0.F,  -1.F, // South
+    -1.F, 0.F,  0.F,  // East
+    1.F,  0.F,  0.F,  // West
 };
 
 constexpr me::array<Direction, std::array<Vector3, 6>> cubeFaces{
-    0.f, 1.f, 0.f, 1.f, 1.f, 1.f, 1.f, 1.f, 0.f, // Top
-    0.f, 1.f, 0.f, 0.f, 1.f, 1.f, 1.f, 1.f, 1.f, //
-    0.f, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f, 0.f, 1.f, // Bottom
-    0.f, 0.f, 0.f, 1.f, 0.f, 1.f, 0.f, 0.f, 1.f, //
-    0.f, 0.f, 1.f, 1.f, 0.f, 1.f, 1.f, 1.f, 1.f, // North
-    0.f, 0.f, 1.f, 1.f, 1.f, 1.f, 0.f, 1.f, 1.f, //
-    0.f, 0.f, 0.f, 1.f, 1.f, 0.f, 1.f, 0.f, 0.f, // South
-    0.f, 0.f, 0.f, 0.f, 1.f, 0.f, 1.f, 1.f, 0.f, //
-    0.f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f, 1.f, 1.f, // East
-    0.f, 0.f, 0.f, 0.f, 1.f, 1.f, 0.f, 1.f, 0.f, //
-    1.f, 0.f, 0.f, 1.f, 1.f, 1.f, 1.f, 0.f, 1.f, // West
-    1.f, 0.f, 0.f, 1.f, 1.f, 0.f, 1.f, 1.f, 1.f, //
+    0.F, 1.F, 0.F, 1.F, 1.F, 1.F, 1.F, 1.F, 0.F, // Top
+    0.F, 1.F, 0.F, 0.F, 1.F, 1.F, 1.F, 1.F, 1.F, //
+    0.F, 0.F, 0.F, 1.F, 0.F, 0.F, 1.F, 0.F, 1.F, // Bottom
+    0.F, 0.F, 0.F, 1.F, 0.F, 1.F, 0.F, 0.F, 1.F, //
+    0.F, 0.F, 1.F, 1.F, 0.F, 1.F, 1.F, 1.F, 1.F, // North
+    0.F, 0.F, 1.F, 1.F, 1.F, 1.F, 0.F, 1.F, 1.F, //
+    0.F, 0.F, 0.F, 1.F, 1.F, 0.F, 1.F, 0.F, 0.F, // South
+    0.F, 0.F, 0.F, 0.F, 1.F, 0.F, 1.F, 1.F, 0.F, //
+    0.F, 0.F, 0.F, 0.F, 0.F, 1.F, 0.F, 1.F, 1.F, // East
+    0.F, 0.F, 0.F, 0.F, 1.F, 1.F, 0.F, 1.F, 0.F, //
+    1.F, 0.F, 0.F, 1.F, 1.F, 1.F, 1.F, 0.F, 1.F, // West
+    1.F, 0.F, 0.F, 1.F, 1.F, 0.F, 1.F, 1.F, 1.F, //
 };
 
 class MeshBuilder
 {
 public:
-    MeshBuilder();
+    MeshBuilder() = default;
 
-    Mesh buildMesh(const Chunk &chunk);
+    Mesh buildMesh(const Chunk &chunk) const;
 };
