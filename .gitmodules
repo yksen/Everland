@@ -10,3 +10,6 @@
 [submodule "lib/PerlinNoise"]
 	path = lib/PerlinNoise
 	url = https://github.com/Reputeless/PerlinNoise
+[submodule "lib/magic_enum"]
+	path = lib/magic_enum
+	url = https://github.com/Neargye/magic_enum

@@ -8,35 +8,48 @@ Chunk::Chunk(const rl::Vector2 &coordinates) : coordinates{coordinates}
 
 void Chunk::draw()
 {
-    static const rl::Shader shader = [] {
-        rl::Shader shader = rl::Shader::Load("resources/shaders/vertex.glsl", "resources/shaders/fragment.glsl");
-        static constexpr float lightColor[3] = {1.0f, 1.0f, 1.0f};
-        static constexpr float objectColor[3] = {0.0f, 1.0f, 0.0f};
-        shader.SetValue(shader.GetLocation("lightColor"), &lightColor, SHADER_UNIFORM_VEC3);
-        shader.SetValue(shader.GetLocation("objectColor"), &objectColor, SHADER_UNIFORM_VEC3);
-        return shader;
-    }();
-    static const rl::Model cube = [] {
-        rl::Model cube{rl::Mesh::Cube(blockSize.x, blockSize.y, blockSize.z)};
-        cube.materials[0].shader = shader;
-        return cube;
-    }();
-
-    Color color = (static_cast<int>(coordinates.x) + static_cast<int>(coordinates.y)) % 2 == 0 ? WHITE : GREEN;
-
-    for (int x = 0; x < size; ++x)
-        for (int z = 0; z < size; ++z)
-            for (float y = 0.0f; y < height; ++y)
-                if (blocks[x][z][y])
-                    cube.Draw({coordinates.x * Chunk::size + x, y, coordinates.y * Chunk::size + z}, 1.0f, color);
+    if (model)
+        model->Draw({coordinates.x * Chunk::size, 0.0f, coordinates.y * Chunk::size}, 1.0f, rl::Color::White());
 }
 
-void Chunk::drawChunkBorders()
+void Chunk::drawChunkBorders() const
 {
-    DrawCubeWiresV({coordinates.x * Chunk::size + Chunk::size / 2 - Chunk::blockSize.x / 2,
-                    Chunk::height / 2 - Chunk::blockSize.y / 2,
-                    coordinates.y * Chunk::size + Chunk::size / 2 - Chunk::blockSize.z / 2},
+    DrawCubeWiresV({coordinates.x * Chunk::size + Chunk::size / 2, Chunk::height / 2,
+                    coordinates.y * Chunk::size + Chunk::size / 2},
                    {Chunk::size, Chunk::height, Chunk::size}, RED);
+}
+
+void Chunk::buildMesh()
+{
+    static const rl::Shader shader = [] {
+        rl::Shader shader = rl::Shader::Load("resources/shaders/vertex.glsl", "resources/shaders/fragment.glsl");
+        static constexpr std::array<float, 3> lightColor{1.0F, 1.0F, 1.0F};
+        shader.SetValue(shader.GetLocation("lightColor"), &lightColor, SHADER_UNIFORM_VEC3);
+        return shader;
+    }();
+
+    auto mesh = MeshBuilder::buildMesh(*this);
+    model = std::make_unique<rl::Model>(mesh);
+    model->materials[0].shader = shader;
+}
+
+bool Chunk::getBlock(int x, int y, int z) const
+{
+    rl::Vector2 chunkPosition{std::floor(static_cast<float>(x) / Chunk::size),
+                              std::floor(static_cast<float>(z) / Chunk::size)};
+    const bool inChunk = static_cast<bool>(chunkPosition.Equals({0, 0}));
+
+    if (inChunk)
+        return blocks[x][z][y];
+
+    const int nx = (x + Chunk::size) % Chunk::size;
+    const int nz = (z + Chunk::size) % Chunk::size;
+
+    auto *neighbor = neighbors[chunkPosition.x + 1][chunkPosition.y + 1];
+    if (neighbor != nullptr)
+        return neighbor->getBlock(nx, y, nz);
+
+    return true;
 }
 
 Chunk Generator::generateChunk(const rl::Vector2 &coordinates)
@@ -46,6 +59,7 @@ Chunk Generator::generateChunk(const rl::Vector2 &coordinates)
     generateTerrain(chunk);
     generateBiomes(chunk);
     generateFeatures(chunk);
+    chunk.buildMesh();
 
     return chunk;
 }
@@ -76,7 +90,10 @@ void DefaultGenerator::generateTerrain(Chunk &chunk)
                                                              (z + chunk.coordinates.y * Chunk::size) * scale, octaves,
                                                              persistance);
             height *= Chunk::height;
-            chunk.blocks[x][z][height] = true;
+
+            for (int y = 0; y < Chunk::height; ++y)
+                if (y < height)
+                    chunk.blocks[x][z][y] = true;
         }
 }
 

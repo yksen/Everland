@@ -1,10 +1,12 @@
-include(FetchContent)
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+set(TEST_SOURCES
+    world/WorldTest.cpp
 )
 
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
+add_executable(EverlandTest ${TEST_SOURCES})
+target_link_libraries(EverlandTest gtest gtest_main EverlandLib)
 
-enable_testing()
+include(GoogleTest)
+gtest_discover_tests(EverlandTest
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)

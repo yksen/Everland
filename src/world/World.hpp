@@ -1,10 +1,11 @@
 #pragma once
 
-#include "raylib-cpp.hpp"
+#include <world/Generator.hpp>
 
-#include "Generator.hpp"
+#include <raylib-cpp.hpp>
 
 #include <chrono>
+#include <deque>
 #include <filesystem>
 #include <memory>
 #include <string>
@@ -20,20 +21,25 @@ public:
     static const fs::path worldsDirectoryPath;
 
     World(const std::string &name, std::unique_ptr<Generator> &&generator);
-    World(const fs::directory_entry &worldDirectory);
-    ~World();
+    explicit World(const fs::directory_entry &worldDirectory);
 
     void update(const rl::Vector2 &playerChunk, int renderDistance);
-    void draw(const rl::Camera &playerCamera, bool debugModeEnabled);
+    void draw(bool debugModeEnabled);
+    void saveInfo();
+    Chunk *getChunk(const rl::Vector2 &coordinates);
 
     std::string name;
     std::chrono::time_point<std::chrono::steady_clock> creationTime;
     std::chrono::time_point<std::chrono::steady_clock> lastPlayedTime;
 
 private:
-    void saveInfo();
+    void generateChunks(const rl::Vector2 &playerChunk, int renderDistance);
+    void addNeighbors(Chunk &chunk);
+    void unloadChunks(const rl::Vector2 &playerChunk, int renderDistance);
+    void removeNeighbors(Chunk &chunk);
 
     fs::directory_entry worldDirectory;
     std::unique_ptr<Generator> generator;
-    std::vector<Chunk> chunkCache;
+    std::deque<std::unique_ptr<Chunk>> chunkCache;
+    rl::Vector2 previousPlayerChunk{0.5F};
 };

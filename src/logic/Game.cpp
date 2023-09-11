@@ -1,13 +1,13 @@
 #include "Game.hpp"
-#include "raylib-cpp.hpp"
 
 #include <fmt/core.h>
+#include <raylib-cpp.hpp>
 
 Game::Game(std::unique_ptr<World> &&world) : world{std::move(world)}
 {
     SetExitKey(KEY_NULL);
     DisableCursor();
-    
+
     gameLoop();
 }
 
@@ -36,7 +36,7 @@ void Game::draw()
 
         BeginMode3D(player.camera);
         {
-            world->draw(player.camera, options.debugModeEnabled);
+            world->draw(options.debugModeEnabled);
             player.draw();
         }
         EndMode3D();
@@ -57,9 +57,10 @@ void Game::drawDebugInfo()
 
     const auto &camera = player.camera;
 
-    std::string cameraPosition =
+    const std::string cameraPosition =
         fmt::format("{:.3f}\t{:.3f}\t{:.3f}", camera.position.x, camera.position.y, camera.position.z);
-    std::string cameraTarget = fmt::format("{:.3f}\t{:.3f}\t{:.3f}", camera.target.x, camera.target.y, camera.target.z);
+    const std::string cameraTarget =
+        fmt::format("{:.3f}\t{:.3f}\t{:.3f}", camera.target.x, camera.target.y, camera.target.z);
 
     DrawFPS(leftMargin, rowSpacing * ++rowNumber);
     DrawText(world->name.c_str(), leftMargin, rowSpacing * ++rowNumber, fontSize, fontColor);
@@ -75,6 +76,7 @@ void Game::gameLoop()
         update();
         draw();
     }
+    world->saveInfo();
     world.reset();
     SetExitKey(KEY_ESCAPE);
 }

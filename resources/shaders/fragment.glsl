@@ -9,19 +9,20 @@ uniform sampler2D texture;
 uniform vec4 colorDiffuse;
 
 uniform vec3 lightColor;
-uniform vec3 objectColor;
 
 out vec4 finalColor;
 
 void main()
 {
+    vec4 color = vec4(0, 1, 0, 1);
+
     float ambientStrength = 0.5;
     vec3 ambient = ambientStrength * lightColor;
 
-    vec3 lightDir = normalize(vec3(fragPosition.x + 1, 192, fragPosition.z + 1));
-    float diff = max(dot(fragNormal, lightDir), 0.0);
-    vec3 diffuse = diff * lightColor;
+    vec3 lightDirection = normalize(vec3(1, 10, 1));
+    float diffuseStrength = max(dot(fragNormal, lightDirection), 0.0);
+    vec3 diffuse = diffuseStrength * lightColor;
 
-    vec3 result = (ambient + diffuse) * objectColor;
-    finalColor = vec4(result, 1.0);
+    vec3 result = (ambient + diffuse) * color.rgb;
+    finalColor = vec4(result, color.a);
 }
