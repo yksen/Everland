@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MeshBuilder.hpp"
+#include <world/MeshBuilder.hpp>
 
 #include <PerlinNoise.hpp>
 #include <raylib-cpp.hpp>
@@ -18,7 +18,6 @@ public:
     static constexpr int size{16};
     static constexpr int height{128};
     static constexpr Vector3 blockSize{1.F, 1.F, 1.F};
-    static MeshBuilder meshBuilder;
 
     explicit Chunk(const rl::Vector2 &coordinates);
 

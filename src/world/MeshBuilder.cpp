@@ -1,23 +1,8 @@
 #include "MeshBuilder.hpp"
 
 #include <algorithm>
-#include <deque>
 
-namespace
-{
-void addFace(std::deque<float> &vertices, std::deque<float> &normals, Direction dir, int x, int y, int z)
-{
-    for (auto vertex : cubeFaces[dir])
-        vertices.insert(vertices.end(), {vertex.x + x, vertex.y + y, vertex.z + z});
-    for (int i = 0; i < 6; ++i)
-    {
-        auto normal = cubeNormals[dir];
-        normals.insert(normals.end(), {normal.x, normal.y, normal.z});
-    }
-}
-} // namespace
-
-Mesh MeshBuilder::buildMesh(const Chunk &chunk) const
+Mesh MeshBuilder::buildMesh(const Chunk &chunk)
 {
     std::deque<float> vertices, normals;
 
@@ -44,4 +29,15 @@ Mesh MeshBuilder::buildMesh(const Chunk &chunk) const
     UploadMesh(&mesh, false);
 
     return mesh;
+}
+
+void MeshBuilder::addFace(std::deque<float> &vertices, std::deque<float> &normals, Direction dir, int x, int y, int z)
+{
+    for (auto vertex : cubeFaces[dir])
+        vertices.insert(vertices.end(), {vertex.x + x, vertex.y + y, vertex.z + z});
+    for (int i = 0; i < 6; ++i)
+    {
+        auto normal = cubeNormals[dir];
+        normals.insert(normals.end(), {normal.x, normal.y, normal.z});
+    }
 }

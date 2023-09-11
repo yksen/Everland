@@ -1,7 +1,5 @@
 #include "Generator.hpp"
 
-MeshBuilder Chunk::meshBuilder{};
-
 Chunk::Chunk(const rl::Vector2 &coordinates) : coordinates{coordinates}
 {
     blocks = std::vector<std::vector<std::vector<bool>>>(
@@ -30,7 +28,7 @@ void Chunk::buildMesh()
         return shader;
     }();
 
-    auto mesh = meshBuilder.buildMesh(*this);
+    auto mesh = MeshBuilder::buildMesh(*this);
     model = std::make_unique<rl::Model>(mesh);
     model->materials[0].shader = shader;
 }
