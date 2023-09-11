@@ -22,6 +22,6 @@ add_custom_target(run
     DEPENDS Everland
 )
 add_custom_target(run_tests
-    COMMAND EverlandTest
+    COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
     DEPENDS EverlandTest
 )

@@ -2,7 +2,24 @@
 
 #include <gtest/gtest.h>
 
-TEST(WorldTest, updateNeighbors)
+class WorldTest : public ::testing::Test
+{
+protected:
+    void SetUp() override
+    {
+        window.Init(1, 1, "", FLAG_WINDOW_HIDDEN);
+    }
+
+    void TearDown() override
+    {
+        window.Close();
+    }
+
+private:
+    rl::Window window;
+};
+
+TEST_F(WorldTest, updateNeighbors)
 {
     World world{"test", std::make_unique<DefaultGenerator>()};
     world.update({0, 0}, 1);
@@ -11,7 +28,7 @@ TEST(WorldTest, updateNeighbors)
     size_t count = 0;
     for (auto &row : neighbors)
         for (auto &neighbor : row)
-            if (neighbor)
+            if (neighbor != nullptr)
                 ++count;
 
     EXPECT_EQ(count, 8);
